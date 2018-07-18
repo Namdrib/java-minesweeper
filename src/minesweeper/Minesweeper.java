@@ -365,7 +365,7 @@ public class Minesweeper
 
 		ticker.connect(game);
 		frame.add(gamePanel, BorderLayout.CENTER);
-		System.out.println("Game panel size: " + gamePanel.getSize());
+		this.addMenuThings();
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);

@@ -135,11 +135,11 @@ public class GamePanel extends JPanel implements GameListener
 
 		// add timer (LINE_END)
 
-		this.add(hud);
+//		this.add(hud);
 		//-------------- testing HUD
 
 		// maybe add a separator?
-		this.add(Box.createRigidArea(new Dimension(0, 5)));
+//		this.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		//-------------- testing cellField
 		Point p = game.getBoard().getDimensions();
@@ -147,28 +147,24 @@ public class GamePanel extends JPanel implements GameListener
 		int yButtons = (int) p.getY();
 
 //		JButton a = new JButton(imageIcon);
-		JPanel cellField = new JPanel(new GridLayout(0, xButtons, -1, -1));
+		JPanel cellField = new JPanel(new GridLayout(0, xButtons, 0, 0));
 //		this.setLayout(new GridLayout(0, xButtons, 0, 0));
-		for (int i=0; i<yButtons; i++)
+		for (int i = 0; i < yButtons; i++)
 		{
-			for (int j=0; j<xButtons; j++)
+			for (int j = 0; j < xButtons; j++)
 			{
-				JLabel a;
-				String s = String.valueOf(i) + "," + String.valueOf(j);
-//				a = new JButton(s, imageIcon);
-//				a = new JLabel();
-				a = new CellIcon(game.getBoard().getCells().get(i).get(j));
+				JLabel a = new CellIcon(
+						game.getBoard().getCells().get(i).get(j));
 //				ImageIcon imageIcon = new ImageIcon(Global.IMAGE_PATH + "flag1.png");
 //				a.setIcon(imageIcon);
-//				a.setText(s);
 				cellField.add(a);
 			}
 		}
 		cellField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
 				Color.WHITE, Color.DARK_GRAY));
-		System.out.println("CellField size: " + cellField.getSize());
 //		this.add(cellField, BorderLayout.CENTER);
 		this.add(cellField);
+		System.out.println("GamePanel: cellField size: " + cellField.getVisibleRect());
 
 		//-------------- testing cellField
 		this.setBorder(new LineBorder(new Color(192, 192, 192), 6));

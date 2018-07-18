@@ -103,7 +103,7 @@ public class CellImpl implements Cell
 	{
 		this.point = point;
 	}
-	
+
 	@Override
 	public Point getPoint()
 	{
@@ -133,7 +133,7 @@ public class CellImpl implements Cell
 	{
 		enableMarking = marking;
 	}
-	
+
 	@Override
 	public void toggleFlag()
 	{
@@ -164,7 +164,7 @@ public class CellImpl implements Cell
 					cellState = CellState.FLAG0;
 					break;
 			}
-//			flagState = (flagState + 1) % (enableMarking ? 3 : 2);
+			// flagState = (flagState + 1) % (enableMarking ? 3 : 2);
 			alertListeners();
 		}
 	}
@@ -180,6 +180,7 @@ public class CellImpl implements Cell
 			return;
 		}
 		// Cannot directly open if the Cell is flagged or marked
+		// however, can directly open (e.g. via middle click or end-of-game reveal)
 		if (flagState == 1)
 		{
 			if (!direct && !isMine())
@@ -206,9 +207,12 @@ public class CellImpl implements Cell
 			// TODO : report to Board that a mine has been opened
 			System.err.println("CellImpl.open(): Landed on a mine at " + point);
 			cellState = ((direct) ? CellState.MINE2 : CellState.MINE1);
-			
+
 			// Open all other mines
-			board.getCells().stream().forEach(r -> r.stream().filter(c -> c.isMine() || c.getFlagState() != 0).forEach(c -> c.open(false)));
+			board.getCells().stream()
+					.forEach(r -> r.stream()
+							.filter(c -> c.isMine() || c.getFlagState() != 0)
+							.forEach(c -> c.open(false)));
 			alertListeners();
 			return;
 		}
@@ -220,7 +224,7 @@ public class CellImpl implements Cell
 			cellState = numToState[number];
 			if (number == 0)
 			{
-				alertListeners();
+				// alertListeners();
 				System.err.println("CellImpl.open(): opening " + point);
 				// perform dfs on all unopened neighbours
 				board.getNeighboursOf((int) point.getX(), (int) point.getY())
