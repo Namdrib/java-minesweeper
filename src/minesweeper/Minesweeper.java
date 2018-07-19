@@ -218,11 +218,10 @@ public class Minesweeper
 
 				// User dialogue for: "Height", "Width" and "Mines"
 				// Existing values
-				Board gameBoard = game.getBoard();
-				Point p = gameBoard.getDimensions();
+				Point p = game.getDimensions();
 				int newHeight = (int) p.getY();
 				int newWidth = (int) p.getX();
-				int newMines = game.getBoard().getNumMines();
+				int newMines = game.getNumMines();
 
 				JTextField heightField = new JTextField(
 						String.valueOf(newHeight));
@@ -267,9 +266,8 @@ public class Minesweeper
 		markingMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				game.getBoard().getCells().stream()
-						.forEach(r -> r.stream().forEach(c -> c
-								.setMarking(markingMenuItem.isSelected())));
+				game.getCells().stream().forEach(r -> r.stream().forEach(
+						c -> c.setMarking(markingMenuItem.isSelected())));
 				System.out.println("Toggle marks: " + enableMarking);
 			}
 		});

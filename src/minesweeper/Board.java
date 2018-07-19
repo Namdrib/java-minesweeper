@@ -42,15 +42,16 @@ public interface Board
 
 	/**
 	 * 
-	 * @param cell target Cell
+	 * @param cell
+	 *            target Cell
 	 * @return a Set of up to 8 Cells neighbouring the Cell specified by the
-	 *         input cell
+	 *         input Cell
 	 */
 	public Set<Cell> getNeighboursOf(Cell cell);
-	
+
 	/**
 	 * 
-	 * @return a point representing (x, y) where x and y are the number of cells
+	 * @return a point representing (x, y) where x and y are the number of Cells
 	 *         in each dimension
 	 */
 	public Point getDimensions();
@@ -73,7 +74,7 @@ public interface Board
 
 	/**
 	 * 
-	 * @return a copy of the Board's cells
+	 * @return a copy of the Board's Cells
 	 */
 	public List<List<Cell>> getCells();
 
@@ -89,7 +90,7 @@ public interface Board
 
 	/**
 	 * 
-	 * Return a 2D grid of the Board's cells. There should be each Cell's
+	 * Return a 2D grid of the Board's Cells. There should be each Cell's
 	 * String, with one row on a single line. The rows should be separated by
 	 * new line characters
 	 * 

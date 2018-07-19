@@ -35,7 +35,7 @@ public class CellIcon extends JLabel implements CellListener
 			switch (btn)
 			{
 				case MouseEvent.BUTTON1:
-					// "push" the cell down but don't do anything yet
+					// "push" the Cell down but don't do anything yet
 					System.out.println("CellIcon: left mouse pressed");
 					leftDown = true;
 					CellIcon.this.setIcon(
@@ -70,7 +70,7 @@ public class CellIcon extends JLabel implements CellListener
 			switch (btn)
 			{
 				case MouseEvent.BUTTON1:
-					// "push" the cell down but don't do anything yet
+					// "push" the Cell down but don't do anything yet
 					System.out.println("CellIcon: left mouse released, " + leftDown);
 					if (leftDown)
 					{
@@ -85,7 +85,7 @@ public class CellIcon extends JLabel implements CellListener
 					// if enough mines, open each neighbour
 					if (CellIcon.this.cell.isOpen())
 					{
-						Set<Cell> neighbours = CellIcon.this.cell.getBoard()
+						Set<Cell> neighbours = CellIcon.this.cell.getGame()
 								.getNeighboursOf(CellIcon.this.cell);
 						int neighbouringFlags = (int) neighbours.stream()
 								.filter(c -> c.getFlagState() == 1).count();

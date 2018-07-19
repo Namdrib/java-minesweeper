@@ -11,7 +11,7 @@ package minesweeper;
 public interface CellListener
 {
 	/**
-	 * Called whenever the visible state of a place has changed. Examples
+	 * Called whenever the visible state of a Cell has changed. Examples
 	 * include:
 	 * <ul>
 	 * <li>opened

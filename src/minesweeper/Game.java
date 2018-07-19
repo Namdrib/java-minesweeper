@@ -1,11 +1,15 @@
 package minesweeper;
 
+import java.awt.Point;
+import java.util.List;
+import java.util.Set;
+
 /**
  * 
  * @author Namdrib
  *
- *         Should have a Board object Also keeps track of timing information
- *         associated with the game
+ *         Keeps track of the Cells and the timing information associated with
+ *         the game
  *         <p>
  *         TODO : This information is used to set high scores (when implemented)
  *
@@ -44,11 +48,11 @@ public interface Game
 	/**
 	 * 
 	 * @param width
-	 *            how many cells wide the board will be
+	 *            how many Cells wide the game will be
 	 * @param height
-	 *            how many cells high the board will be
+	 *            how many Cells high the game will be
 	 * @param numMines
-	 *            how many mines in the board
+	 *            how many Cells are mines
 	 * 
 	 * @see Board.init()
 	 * 
@@ -56,12 +60,44 @@ public interface Game
 	public void createBoard(int width, int height, int numMines);
 
 	/**
+	 * 
+	 * @param cell
+	 *            target Cell
+	 * @return a Set of up to 8 Cells neighbouring the Cell specified by the
+	 *         input Cell
+	 */
+	public Set<Cell> getNeighboursOf(Cell cell);
+
+	/**
+	 * 
+	 * @return a point representing (x, y) where x and y are the number of Cells
+	 *         in each dimension
+	 */
+	public Point getDimensions();
+
+	/**
+	 * 
+	 * @return the total number of mines
+	 */
+	public int getNumMines();
+
+	/**
+	 * This should be <code>numMines - numFlags</code>, regardless of whether
+	 * the flags correspond to a mine. For example if the Board has 10 mines,
+	 * and 6 flags have been used anywhere, then this returns 4. If the number
+	 * is negative, too many flags have been placed.
+	 * 
+	 * @return the number of "unflagged" mines. This number can be negative.
+	 */
+	public int getRemainingMines();
+
+	/**
 	 * Returns a copy so the board state can be observed but not changed
 	 * externally
 	 * 
-	 * @return a copy of the board
+	 * @return a copy of the Cells
 	 */
-	public Board getBoard();
+	public List<List<Cell>> getCells();
 
 	/**
 	 * 
@@ -84,8 +120,7 @@ public interface Game
 	 * are as follows:
 	 * <ul>
 	 * <li><code>0</code>: The game is ongoing
-	 * <li><code>1</code>: The game has been won (all non-mine Cells in the
-	 * Board opened)
+	 * <li><code>1</code>: The game has been won (all non-mine Cells opened)
 	 * <li><code>2</code>: A mine has been exploded
 	 * </ul>
 	 * 

@@ -4,13 +4,13 @@ import java.awt.Point;
 
 /**
  * 
- * Used to monitor the state of a single cell in Minesweeper Each Cell's value
+ * Used to monitor the state of a single Cell in Minesweeper Each Cell's value
  * should be related to its Minesweeper state (whether it is a mine, a number or
  * empty. It should also have state of whether it has been opened, and whether
  * it has a flag (or question mark) on it. A Cell's number value should be
  * determined by how many neighbouring mines it has (or whether it is a mine).
  * <p>
- * To start with, the cell starts off closed and is not flagged nor marked.
+ * The Cell starts off closed and is not flagged nor marked.
  * 
  * @author Namdrib
  *
@@ -53,9 +53,9 @@ public interface Cell
 	 * Return a code signifying its number based on its closeness to mines. The
 	 * return codes are as follows:
 	 * <ul>
-	 * <li><code>-1</code>: The cell contains a mine
-	 * <li><code>0</code>: The cell has no adjacent mines
-	 * <li><code>1-8</code>: The cell has 1-8 adjacent mines
+	 * <li><code>-1</code>: The Cell contains a mine
+	 * <li><code>0</code>: The Cell has no adjacent mines
+	 * <li><code>1-8</code>: The Cell has 1-8 adjacent mines
 	 * </ul>
 	 * 
 	 * @return the return code
@@ -85,24 +85,24 @@ public interface Cell
 
 	/**
 	 * 
-	 * @return the Board in which the Cell resides
+	 * @return the Game in which the Cell resides
 	 */
-	public Board getBoard();
+	public Game getGame();
 
 	/**
 	 * 
-	 * @return <code>true</code> if the cell is open/revealed,
+	 * @return <code>true</code> if the Cell is open/revealed,
 	 *         <code>false</code> otherwise
 	 */
 	public boolean isOpen();
 
 	/**
-	 * Return a code signifying whether the cell is flagged or marked. The
+	 * Return a code signifying whether the Cell is flagged or marked. The
 	 * return codes are as follows:
 	 * <ul>
-	 * <li><code>0</code>: The cell is neither flagged nor marked
-	 * <li><code>1</code>: The cell is flagged
-	 * <li><code>2</code>: The cell is marked
+	 * <li><code>0</code>: The Cell is neither flagged nor marked
+	 * <li><code>1</code>: The Cell is flagged
+	 * <li><code>2</code>: The Cell is marked
 	 * </ul>
 	 * 
 	 * @return the return code
@@ -120,7 +120,7 @@ public interface Cell
 
 	/**
 	 * Toggle the Cell's flag state. The order is
-	 * <code>0 -> 1 -> [2 ->] 0</code>. Marking the cell is only available if
+	 * <code>0 -> 1 -> [2 ->] 0</code>. Marking the Cell is only available if
 	 * marking is enabled.
 	 * <p>
 	 * Toggling the flag state is only available when the Cell is NOT open
@@ -128,10 +128,10 @@ public interface Cell
 	public void toggleFlag();
 
 	/**
-	 * If it is not already open, "open" the cell by revealing what is
+	 * If it is not already open, "open" the Cell by revealing what is
 	 * underneath. If it is empty (i.e. not a mine and does not have a number),
 	 * <code>open()</code> all of its neighbours (including diagonals). Opening
-	 * a cell that has a mine results in the game being lost.
+	 * a Cell that has a mine results in the game being lost.
 	 * 
 	 * @param direct
 	 *            whether this is opened by a direct click

@@ -22,8 +22,8 @@ public class CellImpl implements Cell
 	boolean				enableMarking;	// TODO : replace with a Game option?
 
 	// Not sure if I need this:
-	// Keeping track of the board and its position within the board
-	Board				board;
+	// Keeping track of the game and its position within the game
+	Game				game;
 	Point				point;
 	Set<CellListener>	listeners;
 
@@ -40,17 +40,18 @@ public class CellImpl implements Cell
 
 	/**
 	 * 
-	 * @param board
-	 *            a reference to the Board in which the Cell resides
+	 * @param game
+	 *            a reference to the Game in which the Cell resides
 	 * @param point
-	 *            representing the Cell's location within the Board
+	 *            representing the Cell's location within the Game's grid of
+	 *            Cells
 	 * @param mine
 	 *            whether this Cell has a mine
 	 */
-	public CellImpl(Board board, Point point, boolean mine)
+	public CellImpl(Game game, Point point, boolean mine)
 	{
 		this();
-		this.board = board;
+		this.game = game;
 		this.point = point;
 		if (mine)
 		{
@@ -111,9 +112,9 @@ public class CellImpl implements Cell
 	}
 
 	@Override
-	public Board getBoard()
+	public Game getGame()
 	{
-		return board;
+		return game;
 	}
 
 	@Override
@@ -210,15 +211,14 @@ public class CellImpl implements Cell
 		// TODO : extend to make a safe "lake"
 		if (isMine())
 		{
-			// TODO : report to Board that a mine has been opened
+			// TODO : report to Game that a mine has been opened
 			System.err.println("CellImpl.open(): Landed on a mine at " + point);
 			cellState = ((direct) ? CellState.MINE2 : CellState.MINE1);
 
 			// Open all other mines
-			board.getCells().stream()
-					.forEach(r -> r.stream()
-							.filter(c -> c.isMine() || c.getFlagState() != 0)
-							.forEach(c -> c.open(false)));
+			game.getCells().stream().forEach(r -> r.stream().filter(
+					c -> !c.isOpen() && (c.isMine() || c.getFlagState() != 0))
+					.forEach(c -> c.open(false)));
 			alertListeners();
 			return;
 		}
@@ -233,7 +233,7 @@ public class CellImpl implements Cell
 				// alertListeners();
 				System.err.println("CellImpl.open(): opening " + point);
 				// perform dfs on all unopened neighbours
-				board.getNeighboursOf(this).stream().filter(c -> !c.isOpen())
+				game.getNeighboursOf(this).stream().filter(c -> !c.isOpen())
 						.forEach(c -> c.open(false));
 			}
 		}

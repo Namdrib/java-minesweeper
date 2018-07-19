@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements GameListener
 		this.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		//-------------- testing cellField
-		Point p = game.getBoard().getDimensions();
+		Point p = game.getDimensions();
 		int xButtons = (int) p.getX();
 		int yButtons = (int) p.getY();
 
@@ -151,8 +151,7 @@ public class GamePanel extends JPanel implements GameListener
 		{
 			for (int j = 0; j < xButtons; j++)
 			{
-				JLabel a = new CellIcon(
-						game.getBoard().getCells().get(i).get(j));
+				JLabel a = new CellIcon(game.getCells().get(i).get(j));
 				cellField.add(a);
 			}
 		}
@@ -169,7 +168,7 @@ public class GamePanel extends JPanel implements GameListener
 	public void tileChanged()
 	{
 		// TODO Auto-generated method stub (GamePanel.tileChanged())
-		System.out.println(game.getBoard().getRemainingMines() + " mines left");
+		System.out.println(game.getRemainingMines() + " mines left");
 		// TODO if game is finished, do a thing?
 	}
 
@@ -188,14 +187,14 @@ public class GamePanel extends JPanel implements GameListener
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void timeChanged()
 	{
 		System.out.println("Time changed to " + game.getSecondsPassed());
 		if (minesweeper.enableSound)
 		{
-			playSound(Global.SOUND_PATH + "tick.mp3");			
+			playSound(Global.SOUND_PATH + "tick.mp3");
 		}
 	}
 
