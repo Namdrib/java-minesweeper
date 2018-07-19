@@ -23,6 +23,16 @@ import javax.swing.KeyStroke;
 import javafx.embed.swing.JFXPanel;
 import minesweeper.Game.GameDifficulty;
 
+/**
+ * 
+ * Main window for Minesweeper. Handles menu logic and houses the Game and
+ * GamePanel.
+ * <p>
+ * Game settings are changed through this class (e.g. difficulty, sound)
+ * 
+ * @author Namdrib
+ *
+ */
 public class Minesweeper
 {
 	/**
@@ -73,7 +83,7 @@ public class Minesweeper
 	// Game stuff
 	Game					game;
 	GamePanel				gamePanel;
-	GameDifficulty			difficulty;			// base on menus
+	GameDifficulty			difficulty;				// base on menus
 	int						width, height, numMines;
 
 	// Timing stuff
@@ -111,6 +121,7 @@ public class Minesweeper
 
 		difficulty = GameDifficulty.BEGINNER;
 		resetGame();
+		resetGame(); // quick fix for the UI resizing. force resize (shrink) upon start.
 		timer.scheduleAtFixedRate(ticker, 0, 1000);
 	}
 
@@ -365,7 +376,6 @@ public class Minesweeper
 
 		ticker.connect(game);
 		frame.add(gamePanel, BorderLayout.CENTER);
-		this.addMenuThings();
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);

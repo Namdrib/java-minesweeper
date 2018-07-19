@@ -85,6 +85,12 @@ public interface Cell
 
 	/**
 	 * 
+	 * @return the Board in which the Cell resides
+	 */
+	public Board getBoard();
+
+	/**
+	 * 
 	 * @return <code>true</code> if the cell is open/revealed,
 	 *         <code>false</code> otherwise
 	 */
@@ -118,8 +124,6 @@ public interface Cell
 	 * marking is enabled.
 	 * <p>
 	 * Toggling the flag state is only available when the Cell is NOT open
-	 * <p>
-	 * TODO : Marking
 	 */
 	public void toggleFlag();
 

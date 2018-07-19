@@ -28,8 +28,7 @@ public interface Board
 	 * size to anything else results in the offending dimension being "clamped"
 	 * to [9-30].
 	 * <p>
-	 * numMines must range between 10 and 667 (inclusive). The most mines in a
-	 * 9x9 is 64. TODO : Figure out how this scales with the number of tiles
+	 * max numMines is (width-1) * (height-1)
 	 * 
 	 * @param width
 	 *            requested board width (Cells)
@@ -43,18 +42,12 @@ public interface Board
 
 	/**
 	 * 
-	 * @param x
-	 *            x co-ordinate of target Cell
-	 * @param y
-	 *            y co-ordinate of target Cell
+	 * @param cell target Cell
 	 * @return a Set of up to 8 Cells neighbouring the Cell specified by the
-	 *         dimensions
-	 * @throws IndexOutOfBoundsException
-	 *             if provided x or y is out of bounds of the Board's cells
+	 *         input cell
 	 */
-	public Set<Cell> getNeighboursOf(int x, int y)
-			throws IndexOutOfBoundsException;
-
+	public Set<Cell> getNeighboursOf(Cell cell);
+	
 	/**
 	 * 
 	 * @return a point representing (x, y) where x and y are the number of cells

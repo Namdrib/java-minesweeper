@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class BoardImpl implements Board
 {
@@ -38,7 +37,7 @@ public class BoardImpl implements Board
 	{
 		// Clamp the dimensions and mine numbers
 		dims = new Point(Math.max(9, Math.min(30, width)),
-				Math.max(9, Math.min(30, height)));
+				Math.max(9, Math.min(24, height)));
 		int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
 		this.numMines = Math.max(10, Math.min(maxMines, numMines));
 
@@ -71,45 +70,20 @@ public class BoardImpl implements Board
 		}
 
 		// Update each Cell's number according to their neighbouring mines
-		for (int i = 0; i < dims.getY(); i++)
-		{
-			for (int j = 0; j < dims.getX(); j++)
-			{
-				// Don't need to update a mine's number
-				if (cells.get(i).get(j).isMine())
-				{
-					continue;
-				}
-
-				int numNeighbouringMines = (int) getNeighboursOf(j, i).stream()
-						.filter(c -> c.isMine()).count();
-
-				cells.get(i).get(j).setNumber(numNeighbouringMines);
-			}
-		}
-
-		// Same as above
 		cells.stream().forEach(row -> row.stream()
 				.filter(cell -> !cell.isMine()).forEach(cell -> {
-					Point p = cell.getPoint();
-					int numNeighbouringMines = (int) getNeighboursOf(
-							(int) p.getX(), (int) p.getY()).stream()
-									.filter(neighbour -> neighbour.isMine())
-									.count();
+					int numNeighbouringMines = (int) getNeighboursOf(cell)
+							.stream().filter(neighbour -> neighbour.isMine())
+							.count();
 					cell.setNumber(numNeighbouringMines);
 				}));
 	}
 
 	@Override
-	public Set<Cell> getNeighboursOf(int xIn, int yIn)
-			throws IndexOutOfBoundsException
+	public Set<Cell> getNeighboursOf(Cell cell)
 	{
-		if (yIn < 0 || yIn >= dims.getY() || xIn < 0 || xIn >= dims.getX())
-		{
-			throw new IndexOutOfBoundsException(
-					"Bad bounds: x=" + xIn + ", y=" + yIn);
-		}
 		Set<Cell> neighbours = new HashSet<>();
+		Point p = cell.getPoint();
 
 		// Search each adjacent Cell including diagonals
 		// Do not include self or out-of-bounds co-ordinates
@@ -117,8 +91,8 @@ public class BoardImpl implements Board
 		{
 			for (int m = -1; m < 2; m++)
 			{
-				int newY = yIn + n;
-				int newX = xIn + m;
+				int newY = (int) p.getY() + n;
+				int newX = (int) p.getX() + m;
 				if ((n == 0 && m == 0) || newY < 0 || newX < 0
 						|| newY >= dims.getY() || newX >= dims.getX())
 				{

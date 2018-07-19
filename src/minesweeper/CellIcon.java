@@ -1,9 +1,9 @@
 package minesweeper;
 
 import java.awt.event.MouseEvent;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 
@@ -26,7 +26,7 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				return;
 			}
-			
+
 //			if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) > 0)
 //			{
 //				cell.toggleFlag();
@@ -38,6 +38,8 @@ public class CellIcon extends JLabel implements CellListener
 					// "push" the cell down but don't do anything yet
 					System.out.println("CellIcon: left mouse pressed");
 					leftDown = true;
+					CellIcon.this.setIcon(
+							new ImageIcon(Global.IMAGE_PATH + "_0.png"));
 					break;
 				case MouseEvent.BUTTON2:
 					System.out.println("CellIcon: middle mouse pressed");
@@ -69,17 +71,32 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				case MouseEvent.BUTTON1:
 					// "push" the cell down but don't do anything yet
-					System.out.println("CellIcon: left mouse pressed");
+					System.out.println("CellIcon: left mouse released, " + leftDown);
+					if (leftDown)
+					{
+						System.out.println("Open it");
+						cell.open(true);
+					}
 					leftDown = false;
-					cell.open(true);
 					break;
 				case MouseEvent.BUTTON2:
-					System.out.println("CellIcon: middle mouse pressed");
+					System.out.println("CellIcon: middle mouse released");
 					middleDown = false;
 					// if enough mines, open each neighbour
+					if (CellIcon.this.cell.isOpen())
+					{
+						Set<Cell> neighbours = CellIcon.this.cell.getBoard()
+								.getNeighboursOf(CellIcon.this.cell);
+						int neighbouringFlags = (int) neighbours.stream()
+								.filter(c -> c.getFlagState() == 1).count();
+						if (neighbouringFlags == CellIcon.this.cell.getNumber())
+						{
+							neighbours.stream().forEach(c -> c.open(false));
+						}
+					}
 					break;
 				case MouseEvent.BUTTON3:
-					System.out.println("CellIcon: right mouse pressed");
+					System.out.println("CellIcon: right mouse released");
 					rightDown = false;
 					break;
 				default:
@@ -97,20 +114,37 @@ public class CellIcon extends JLabel implements CellListener
 				return;
 			}
 
-			if (e.getModifiers() == MouseEvent.BUTTON1_MASK
-					|| e.getModifiers() == MouseEvent.BUTTON2_MASK)
+			if (e.getModifiers() == MouseEvent.BUTTON1_MASK)
 			{
 				System.out.println("Entered with left click");
+				leftDown = true;
 				CellIcon.this
 						.setIcon(new ImageIcon(Global.IMAGE_PATH + "_0.png"));
 				validateAndRepaint();
+			}
+			if (e.getModifiers() == MouseEvent.BUTTON2_MASK)
+			{
+				System.out.println("Entered with middle click");
+				middleDown = true;
+				CellIcon.this
+						.setIcon(new ImageIcon(Global.IMAGE_PATH + "_0.png"));
+				validateAndRepaint();
+			}
+			if (e.getModifiers() == MouseEvent.BUTTON3_MASK)
+			{
+				System.out.println("Entered with right click");
+				rightDown = true;
 			}
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e)
 		{
-			if (CellIcon.this.cell.isOpen() || CellIcon.this.cell.getFlagState() == 1)
+			leftDown = false;
+			middleDown = false;
+			rightDown = false;
+			if (CellIcon.this.cell.isOpen()
+					|| CellIcon.this.cell.getFlagState() == 1)
 			{
 				return;
 			}
@@ -118,7 +152,7 @@ public class CellIcon extends JLabel implements CellListener
 			if (!(e.getModifiers() == MouseEvent.BUTTON1_MASK)
 					|| !(e.getModifiers() == MouseEvent.BUTTON2_MASK))
 			{
-				CellIcon.this.setIcon(new ImageIcon(Global.IMAGE_PATH + CellIcon.this.cell.getCellState().toString() + ".png"));
+				CellIcon.this.resetImageToCellState();
 				System.out.println(
 						"CellIcon: Exited: " + leftDown + " | " + middleDown);
 				validateAndRepaint();
@@ -126,10 +160,10 @@ public class CellIcon extends JLabel implements CellListener
 		}
 	}
 
-	Cell		cell;
-	String		imageName;
-	int			xSize;
-	int			ySize;
+	Cell	cell;
+	String	imageName;
+	int		xSize;
+	int		ySize;
 
 	public CellIcon()
 	{
@@ -157,14 +191,19 @@ public class CellIcon extends JLabel implements CellListener
 		repaint();
 	}
 
+	private void resetImageToCellState()
+	{
+		this.setIcon(new ImageIcon(Global.IMAGE_PATH
+				+ this.cell.getCellState().toString() + ".png"));
+	}
+
 	@Override
 	public void cellChanged()
 	{
 		System.err.println("Cell changed");
-		imageName = Global.IMAGE_PATH + cell.getCellState().toString().toLowerCase() + ".png";
-
-		System.out.println("Cell " + cell.getPoint() + " changed to " + imageName);
-		this.setIcon(new ImageIcon(imageName));
+		resetImageToCellState();
+		System.out.println("cellChanged: " + cell.getPoint() + " to "
+				+ this.getIcon().toString());
 		validateAndRepaint();
 	}
 

@@ -111,6 +111,12 @@ public class CellImpl implements Cell
 	}
 
 	@Override
+	public Board getBoard()
+	{
+		return board;
+	}
+
+	@Override
 	public boolean isOpen()
 	{
 		return isOpen;
@@ -227,8 +233,7 @@ public class CellImpl implements Cell
 				// alertListeners();
 				System.err.println("CellImpl.open(): opening " + point);
 				// perform dfs on all unopened neighbours
-				board.getNeighboursOf((int) point.getX(), (int) point.getY())
-						.stream().filter(c -> !c.isOpen())
+				board.getNeighboursOf(this).stream().filter(c -> !c.isOpen())
 						.forEach(c -> c.open(false));
 			}
 		}

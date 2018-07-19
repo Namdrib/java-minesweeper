@@ -7,7 +7,7 @@ package minesweeper;
  *         Should have a Board object Also keeps track of timing information
  *         associated with the game
  *         <p>
- * 		TODO : This information is used to set high scores (when implemented)
+ *         TODO : This information is used to set high scores (when implemented)
  *
  */
 public interface Game
@@ -68,7 +68,7 @@ public interface Game
 	 * @return the game difficulty
 	 */
 	public GameDifficulty getDifficulty();
-	
+
 	/**
 	 * Tick used for timing information. Increases a counter based on a counter.
 	 */

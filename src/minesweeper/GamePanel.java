@@ -3,6 +3,7 @@ package minesweeper;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -32,7 +33,7 @@ import javafx.scene.media.MediaPlayer;
  */
 public class GamePanel extends JPanel implements GameListener
 {
-	static Minesweeper		minesweeper;
+	Minesweeper				minesweeper;
 	Game					game;
 	GamePanelMouseListener	l;
 
@@ -78,9 +79,9 @@ public class GamePanel extends JPanel implements GameListener
 
 		//-------------- testing HUD
 		JPanel hud = new JPanel(new BorderLayout());
-		
+
 		// add remaining mines (LINE_START)
-		
+
 		// add face (CENTER) TODO : turn into JLabel?
 		JButton face = new JButton("Face, yo",
 				new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
@@ -105,58 +106,53 @@ public class GamePanel extends JPanel implements GameListener
 			public void mouseEntered(MouseEvent arg0)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseExited(MouseEvent arg0)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mousePressed(MouseEvent arg0)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent arg0)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
-			
 		});
 
 		hud.add(face, BorderLayout.CENTER);
 
 		// add timer (LINE_END)
 
-//		this.add(hud);
+		this.add(hud);
 		//-------------- testing HUD
 
 		// maybe add a separator?
-//		this.add(Box.createRigidArea(new Dimension(0, 5)));
+		this.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		//-------------- testing cellField
 		Point p = game.getBoard().getDimensions();
 		int xButtons = (int) p.getX();
 		int yButtons = (int) p.getY();
 
-//		JButton a = new JButton(imageIcon);
 		JPanel cellField = new JPanel(new GridLayout(0, xButtons, 0, 0));
-//		this.setLayout(new GridLayout(0, xButtons, 0, 0));
 		for (int i = 0; i < yButtons; i++)
 		{
 			for (int j = 0; j < xButtons; j++)
 			{
 				JLabel a = new CellIcon(
 						game.getBoard().getCells().get(i).get(j));
-//				ImageIcon imageIcon = new ImageIcon(Global.IMAGE_PATH + "flag1.png");
-//				a.setIcon(imageIcon);
 				cellField.add(a);
 			}
 		}
@@ -164,7 +160,6 @@ public class GamePanel extends JPanel implements GameListener
 				Color.WHITE, Color.DARK_GRAY));
 //		this.add(cellField, BorderLayout.CENTER);
 		this.add(cellField);
-		System.out.println("GamePanel: cellField size: " + cellField.getVisibleRect());
 
 		//-------------- testing cellField
 		this.setBorder(new LineBorder(new Color(192, 192, 192), 6));
@@ -210,4 +205,10 @@ public class GamePanel extends JPanel implements GameListener
 		// TODO Auto-generated method stub (GamePanel.otherChanged())
 	}
 
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		g.setColor(new Color(192, 192, 192));
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+	}
 }
