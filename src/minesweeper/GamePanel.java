@@ -100,7 +100,7 @@ public class GamePanel extends JPanel implements GameListener
 				.setLayout(new BoxLayout(numMinePanel, BoxLayout.LINE_AXIS));
 		for (int i=0; i<numMineLabels.length; i++)
 		{
-			numMineLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "num_0.png"));
+			numMineLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			numMinePanel.add(numMineLabels[i]);
 		}
 		numMinePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements GameListener
 		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
 		for (int i=0; i<timerLabels.length; i++)
 		{
-			timerLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "num_0.png"));
+			timerLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			timerPanel.add(timerLabels[i]);
 		}
 		timerPanel.setBorder(BorderFactory.createBevelBorder(
@@ -237,17 +237,12 @@ public class GamePanel extends JPanel implements GameListener
 		{
 			playSound(Global.SOUND_PATH + "tick.mp3");
 		}
-		for (int i=0; i<timeStr.length(); i++)
+		for (int i = 0; i < timeStr.length(); i++)
 		{
-			String img = Global.IMAGE_PATH + "num_" + timeStr.charAt(i) + ".png";
+			String img = Global.IMAGE_PATH + "hud" + timeStr.charAt(i) + ".png";
 			System.out.println(img);
 			timerLabels[i].setIcon(new ImageIcon(img));
-			System.out.println("Changed " + i + " to " + timerLabels[i].getIcon());
-			timerLabels[i].validate();
-			timerLabels[i].repaint();
 		}
-		validate();
-		repaint();
 	}
 
 	@Override

@@ -19,6 +19,11 @@ public class CellIcon extends JLabel implements CellListener
 		boolean	middleDown	= false;
 		boolean	rightDown	= false;
 
+		private void pressCellIcon()
+		{
+			CellIcon.this.setIcon(new ImageIcon(Global.IMAGE_PATH + "open0.png"));
+		}
+		
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
@@ -38,8 +43,7 @@ public class CellIcon extends JLabel implements CellListener
 					// "push" the Cell down but don't do anything yet
 					System.out.println("CellIcon: left mouse pressed");
 					leftDown = true;
-					CellIcon.this.setIcon(
-							new ImageIcon(Global.IMAGE_PATH + "_0.png"));
+					pressCellIcon();
 					break;
 				case MouseEvent.BUTTON2:
 					System.out.println("CellIcon: middle mouse pressed");
@@ -71,7 +75,8 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				case MouseEvent.BUTTON1:
 					// "push" the Cell down but don't do anything yet
-					System.out.println("CellIcon: left mouse released, " + leftDown);
+					System.out.println(
+							"CellIcon: left mouse released, " + leftDown);
 					if (leftDown)
 					{
 						System.out.println("Open it");
@@ -118,16 +123,14 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				System.out.println("Entered with left click");
 				leftDown = true;
-				CellIcon.this
-						.setIcon(new ImageIcon(Global.IMAGE_PATH + "_0.png"));
+				pressCellIcon();
 				validateAndRepaint();
 			}
 			if (e.getModifiers() == MouseEvent.BUTTON2_MASK)
 			{
 				System.out.println("Entered with middle click");
 				middleDown = true;
-				CellIcon.this
-						.setIcon(new ImageIcon(Global.IMAGE_PATH + "_0.png"));
+				pressCellIcon();
 				validateAndRepaint();
 			}
 			if (e.getModifiers() == MouseEvent.BUTTON3_MASK)

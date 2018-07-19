@@ -251,9 +251,9 @@ public class GameImpl implements Game
 		for (List<Cell> row : cells)
 		{
 			out += "| ";
-			for (Cell c : row)
+			for (Cell cell : row)
 			{
-				out += String.valueOf(c);
+				out += String.valueOf(cell);
 			}
 			out += " |" + System.lineSeparator();
 		}

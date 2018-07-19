@@ -19,7 +19,7 @@ public interface Cell
 {
 	public enum CellState
 	{
-		_0, _1, _2, _3, _4, _5, _6, _7, _8, // normal numbers. 0 is pressed in/safe
+		OPEN0, OPEN1, OPEN2, OPEN3, OPEN4, OPEN5, OPEN6, OPEN7, OPEN8, // normal numbers. 0 is pressed in/safe
 		FLAG0, // normal
 		FLAG1, // flagged
 		FLAG2, // marked 

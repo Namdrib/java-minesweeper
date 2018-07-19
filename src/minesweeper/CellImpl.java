@@ -152,7 +152,6 @@ public class CellImpl implements Cell
 				case 0:
 					flagState = 1;
 					cellState = CellState.FLAG1;
-					System.out.println("Ye");
 					break;
 				case 1:
 					if (enableMarking)
@@ -171,7 +170,6 @@ public class CellImpl implements Cell
 					cellState = CellState.FLAG0;
 					break;
 			}
-			// flagState = (flagState + 1) % (enableMarking ? 3 : 2);
 			alertListeners();
 		}
 	}
@@ -224,9 +222,10 @@ public class CellImpl implements Cell
 		}
 		else
 		{
-			CellState[] numToState = { CellState._0, CellState._1, CellState._2,
-					CellState._3, CellState._4, CellState._5, CellState._6,
-					CellState._7, CellState._8 };
+			CellState[] numToState = { CellState.OPEN0, CellState.OPEN1,
+					CellState.OPEN2, CellState.OPEN3, CellState.OPEN4,
+					CellState.OPEN5, CellState.OPEN6, CellState.OPEN7,
+					CellState.OPEN8 };
 			cellState = numToState[number];
 			if (number == 0)
 			{
