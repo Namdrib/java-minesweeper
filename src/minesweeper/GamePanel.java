@@ -204,14 +204,6 @@ public class GamePanel extends JPanel implements GameListener
 		this.setBorder(new LineBorder(new Color(192, 192, 192), 6));
 	}
 
-	@Override
-	public void tileChanged()
-	{
-		// TODO Auto-generated method stub (GamePanel.tileChanged())
-		System.out.println(game.getRemainingMines() + " mines left");
-		// TODO if game is finished, do a thing?
-	}
-
 	// Path must be relative to the project folder,
 	// not from this particular file
 	private static void playSound(String s)
@@ -229,7 +221,29 @@ public class GamePanel extends JPanel implements GameListener
 	}
 
 	@Override
-	public void timeChanged()
+	public void gameLose()
+	{
+		// TODO Auto-generated method stub (GamePanel.tileChanged())
+		// TODO if game is finished, do a thing?
+		System.out.println(game.getRemainingMines() + " mines left");
+		if (minesweeper.enableSound)
+		{
+			playSound(Global.SOUND_PATH + "lose.mp3");
+		}
+	}
+
+	@Override
+	public void gameWin()
+	{
+		// TODO Auto-generated method stub (GamePanel.otherChanged())
+		if (minesweeper.enableSound)
+		{
+			playSound(Global.SOUND_PATH + "win.mp3");
+		}
+	}
+
+	@Override
+	public void gameTick()
 	{
 		String timeStr = String.format("%03d", game.getSecondsPassed());
 		System.out.println("Time changed to " + timeStr);
@@ -243,12 +257,6 @@ public class GamePanel extends JPanel implements GameListener
 			System.out.println(img);
 			timerLabels[i].setIcon(new ImageIcon(img));
 		}
-	}
-
-	@Override
-	public void otherChanged()
-	{
-		// TODO Auto-generated method stub (GamePanel.otherChanged())
 	}
 
 	@Override

@@ -2,9 +2,9 @@ package minesweeper;
 
 public interface GameListener
 {
-	public void tileChanged();
+	public void gameLose();
 
-	public void timeChanged();
-
-	public void otherChanged();
+	public void gameWin();
+	
+	public void gameTick();
 }

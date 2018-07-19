@@ -2,10 +2,12 @@ package minesweeper;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -22,9 +24,9 @@ public class GameImpl implements Game
 	 */
 	public enum GameChangeType
 	{
-		TILE, // tile change (something to do with the board)
-		TIME, // timing change
-		OTHER, // other changes
+		LOSE, // tile change (something to do with the board)
+		WIN, // other changes
+		TICK, // timing change
 	}
 
 	Set<GameListener>	listeners;
@@ -90,14 +92,14 @@ public class GameImpl implements Game
 	{
 		switch (type)
 		{
-			case TILE:
-				listeners.stream().forEach(e -> e.tileChanged());
+			case LOSE:
+				listeners.stream().forEach(e -> e.gameLose());
 				break;
-			case TIME:
-				listeners.stream().forEach(e -> e.timeChanged());
+			case WIN:
+				listeners.stream().forEach(e -> e.gameWin());
 				break;
-			case OTHER:
-				listeners.stream().forEach(e -> e.otherChanged());
+			case TICK:
+				listeners.stream().forEach(e -> e.gameTick());
 				break;
 			default:
 				return;
@@ -171,7 +173,7 @@ public class GameImpl implements Game
 			if (secondsPassed < 999)
 			{
 				secondsPassed++;
-				alertListeners(GameChangeType.TIME);
+				alertListeners(GameChangeType.TICK);
 			}
 		}
 	}
@@ -185,8 +187,21 @@ public class GameImpl implements Game
 	@Override
 	public int isFinished()
 	{
+		int openedMines = (int) cells.stream().flatMap(Collection::stream).filter(c -> c.isOpen() && c.isMine()).count();
+		if (openedMines > 1)
+		{
+			alertListeners(GameChangeType.LOSE);
+			return 2;
+		}
 		// TODO Auto-generated method stub (GameImpl.isFinished())
-
+		int a = (int) cells.stream().flatMap(Collection::stream).filter(c -> c.isOpen()).count();
+		System.out.println("There should be " + a + " opened cells?");
+		if (a == (dims.getX() * dims.getY() - numMines))
+		{
+			System.out.println("All non-mines are opened!");
+			alertListeners(GameChangeType.WIN);
+			return 1;
+		}
 		return 0;
 	}
 

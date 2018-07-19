@@ -207,6 +207,12 @@ public class CellIcon extends JLabel implements CellListener
 		resetImageToCellState();
 		System.out.println("cellChanged: " + cell.getPoint() + " to "
 				+ this.getIcon().toString());
+		
+		if (cell.isOpen() && cell.isMine())
+		{
+			System.out.println("isFinished: open mine: " + cell.getGame().isFinished());
+		}
+		System.out.println("isFinished: " + cell.getGame().isFinished());
 		validateAndRepaint();
 	}
 
