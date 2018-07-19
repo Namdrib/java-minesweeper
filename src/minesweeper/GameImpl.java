@@ -52,11 +52,7 @@ public class GameImpl implements Game
 		this.width = width;
 		this.height = height;
 		this.numMines = numMines;
-		if (this.difficulty == null)
-		{
-			this.difficulty = GameDifficulty.BEGINNER;
-		}
-		// System.out.println("New game at " + difficulty.toString());
+
 		switch (difficulty)
 		{
 			case BEGINNER:

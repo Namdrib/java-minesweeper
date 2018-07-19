@@ -37,8 +37,13 @@ public class GamePanel extends JPanel implements GameListener
 	Game					game;
 	GamePanelMouseListener	l;
 
-	ImageIcon[]				timerIcons;
+	JPanel					numMinePanel;
+	JLabel[]				numMineLabels;
 	ImageIcon[]				numMineIcons;
+
+	JPanel					timerPanel;
+	JLabel[]				timerLabels;
+	ImageIcon[]				timerIcons;
 
 	// TODO big boi
 	private class GamePanelMouseListener extends MouseInputAdapter
@@ -64,13 +69,21 @@ public class GamePanel extends JPanel implements GameListener
 
 	public GamePanel()
 	{
-//		this.setLayout(new BorderLayout());
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		l = new GamePanelMouseListener();
 		addMouseListener(l);
 		addMouseMotionListener(l);
+
+		numMineLabels = new JLabel[3];
+		timerLabels = new JLabel[3];
+		for (int i=0; i<3; i++)
+		{
+			numMineLabels[i] = new JLabel();
+			timerLabels[i] = new JLabel();
+		}
 	}
 
+	// TODO : Create custom bevel border to allow thicknesses
 	public GamePanel(Game game, Minesweeper minesweeper)
 	{
 		this();
@@ -79,66 +92,93 @@ public class GamePanel extends JPanel implements GameListener
 
 		//-------------- testing HUD
 		JPanel hud = new JPanel(new BorderLayout());
+		hud.add(Box.createRigidArea(new Dimension(5, 0)), BorderLayout.LINE_START);
 
 		// add remaining mines (LINE_START)
+		numMinePanel = new JPanel();
+		numMinePanel
+				.setLayout(new BoxLayout(numMinePanel, BoxLayout.LINE_AXIS));
+		for (int i=0; i<numMineLabels.length; i++)
+		{
+			numMineLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "num_0.png"));
+			numMinePanel.add(numMineLabels[i]);
+		}
+		numMinePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
+				Color.WHITE, Color.DARK_GRAY));
+		hud.add(numMinePanel, BorderLayout.LINE_START);
 
 		// add face (CENTER) TODO : turn into JLabel?
-		JButton face = new JButton("Face, yo",
+		//		JButton face = new JButton(".",
+		//				new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
+		//		face.setMnemonic(MouseEvent.BUTTON1);
+		//		face.addActionListener(new ActionListener() {
+		//			public void actionPerformed(ActionEvent e)
+		//			{
+		//				System.out.println("Face pressed!");
+		//				minesweeper.resetGame();
+		//			}
+		//		});
+		//		face.addMouseListener(new MouseListener() {
+		//
+		//			@Override
+		//			public void mouseClicked(MouseEvent arg0)
+		//			{
+		//				// TODO Auto-generated method stub
+		//				;
+		//			}
+		//
+		//			@Override
+		//			public void mouseEntered(MouseEvent arg0)
+		//			{
+		//				// TODO Auto-generated method stub
+		//
+		//			}
+		//
+		//			@Override
+		//			public void mouseExited(MouseEvent arg0)
+		//			{
+		//				// TODO Auto-generated method stub
+		//
+		//			}
+		//
+		//			@Override
+		//			public void mousePressed(MouseEvent arg0)
+		//			{
+		//				// TODO Auto-generated method stub
+		//
+		//			}
+		//
+		//			@Override
+		//			public void mouseReleased(MouseEvent arg0)
+		//			{
+		//				// TODO Auto-generated method stub
+		//
+		//			}
+		//		});
+
+		JLabel face = new JLabel(
 				new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
-		face.setMnemonic(MouseEvent.BUTTON1);
-		face.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				System.out.println("Face pressed!");
-				minesweeper.resetGame();
-			}
-		});
-		face.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-				;
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-
-			}
-		});
-
 		hud.add(face, BorderLayout.CENTER);
 
 		// add timer (LINE_END)
+		timerPanel = new JPanel();
+		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
+		for (int i=0; i<timerLabels.length; i++)
+		{
+			timerLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "num_0.png"));
+			timerPanel.add(timerLabels[i]);
+		}
+		timerPanel.setBorder(BorderFactory.createBevelBorder(
+				BevelBorder.LOWERED, Color.WHITE, Color.DARK_GRAY));
+		hud.add(timerPanel, BorderLayout.LINE_END);
+
+		hud.setBackground(new Color(192, 192, 192));
+		hud.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
+				Color.WHITE, Color.DARK_GRAY));
 
 		this.add(hud);
 		//-------------- testing HUD
 
-		// maybe add a separator?
 		this.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		//-------------- testing cellField
@@ -157,7 +197,7 @@ public class GamePanel extends JPanel implements GameListener
 		}
 		cellField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
 				Color.WHITE, Color.DARK_GRAY));
-//		this.add(cellField, BorderLayout.CENTER);
+		//		this.add(cellField, BorderLayout.CENTER);
 		this.add(cellField);
 
 		//-------------- testing cellField
@@ -191,11 +231,23 @@ public class GamePanel extends JPanel implements GameListener
 	@Override
 	public void timeChanged()
 	{
-		System.out.println("Time changed to " + game.getSecondsPassed());
+		String timeStr = String.format("%03d", game.getSecondsPassed());
+		System.out.println("Time changed to " + timeStr);
 		if (minesweeper.enableSound)
 		{
 			playSound(Global.SOUND_PATH + "tick.mp3");
 		}
+		for (int i=0; i<timeStr.length(); i++)
+		{
+			String img = Global.IMAGE_PATH + "num_" + timeStr.charAt(i) + ".png";
+			System.out.println(img);
+			timerLabels[i].setIcon(new ImageIcon(img));
+			System.out.println("Changed " + i + " to " + timerLabels[i].getIcon());
+			timerLabels[i].validate();
+			timerLabels[i].repaint();
+		}
+		validate();
+		repaint();
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import javafx.embed.swing.JFXPanel;
 import minesweeper.Game.GameDifficulty;
@@ -379,6 +380,7 @@ public class Minesweeper
 		frame.setVisible(true);
 	}
 
+	// TODO : Write best times to a file? Or keep locally
 	private void showBestTimes()
 	{
 		;
@@ -395,9 +397,16 @@ public class Minesweeper
 
 	public static void main(String[] args)
 	{
-		// this makes sounds play by initialising a thing
-		// https://stackoverflow.com/questions/14025718/javafx-toolkit-not-initialized-when-trying-to-play-an-mp3-file-through-mediap
-		@SuppressWarnings("unused") final JFXPanel fxPanel = new JFXPanel();
-		@SuppressWarnings("unused") Minesweeper minesweeper = new Minesweeper();
+		// This wrapper prevents an exception from unknown source
+		// https://stackoverflow.com/questions/37832170/java-exception-in-thread-awt-eventqueue-0-java-lang-classcastexception#37832926
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				// this makes sounds play by initialising a thing
+				// https://stackoverflow.com/questions/14025718/javafx-toolkit-not-initialized-when-trying-to-play-an-mp3-file-through-mediap
+				@SuppressWarnings("unused") final JFXPanel fxPanel = new JFXPanel();
+				@SuppressWarnings("unused") Minesweeper minesweeper = new Minesweeper();
+			}
+		});
 	}
 }
