@@ -201,6 +201,10 @@ public class CellImpl implements Cell
 			}
 			return;
 		}
+		if (!getGame().isStarted())
+		{
+			getGame().start();
+		}
 
 		isOpen = true;
 
@@ -232,7 +236,7 @@ public class CellImpl implements Cell
 				// alertListeners();
 				System.err.println("CellImpl.open(): opening " + point);
 				// perform dfs on all unopened neighbours
-				game.getNeighboursOf(this).stream().filter(c -> !c.isOpen())
+				game.getNeighboursOf(this).stream().filter(c -> !c.isOpen() && c.getFlagState() != 1)
 						.forEach(c -> c.open(false));
 			}
 		}

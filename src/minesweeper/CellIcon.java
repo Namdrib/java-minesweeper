@@ -27,6 +27,10 @@ public class CellIcon extends JLabel implements CellListener
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
+			if (CellIcon.this.cell.getGame().getFinished() > 0)
+			{
+				return;
+			}
 			if (cell.isOpen())
 			{
 				return;
@@ -63,6 +67,10 @@ public class CellIcon extends JLabel implements CellListener
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
+			if (CellIcon.this.cell.getGame().getFinished() > 0)
+			{
+				return;
+			}
 			System.out.println("CellIcon: mouse clicked");
 			validateAndRepaint();
 		}
@@ -70,6 +78,10 @@ public class CellIcon extends JLabel implements CellListener
 		@Override
 		public void mouseReleased(MouseEvent e)
 		{
+			if (CellIcon.this.cell.getGame().getFinished() > 0)
+			{
+				return;
+			}
 			int btn = e.getButton();
 			switch (btn)
 			{
@@ -113,6 +125,10 @@ public class CellIcon extends JLabel implements CellListener
 		@Override
 		public void mouseEntered(MouseEvent e)
 		{
+			if (CellIcon.this.cell.getGame().getFinished() > 0)
+			{
+				return;
+			}
 			System.out.println("Mouse entered");
 			if (cell.isOpen() || cell.getFlagState() == 1)
 			{
@@ -143,6 +159,10 @@ public class CellIcon extends JLabel implements CellListener
 		@Override
 		public void mouseExited(MouseEvent e)
 		{
+			if (CellIcon.this.cell.getGame().getFinished() > 0)
+			{
+				return;
+			}
 			leftDown = false;
 			middleDown = false;
 			rightDown = false;
@@ -197,22 +217,23 @@ public class CellIcon extends JLabel implements CellListener
 	private void resetImageToCellState()
 	{
 		this.setIcon(new ImageIcon(Global.IMAGE_PATH
-				+ this.cell.getCellState().toString() + ".png"));
+				+ cell.getCellState().toString() + ".png"));
 	}
 
 	@Override
 	public void cellChanged()
 	{
-		System.err.println("Cell changed");
+		System.err.print("Cell changed: ");
 		resetImageToCellState();
-		System.out.println("cellChanged: " + cell.getPoint() + " to "
-				+ this.getIcon().toString());
+
+		System.err
+				.println(cell.getPoint() + " to " + getIcon().toString());
 		
 		if (cell.isOpen() && cell.isMine())
 		{
-			System.out.println("isFinished: open mine: " + cell.getGame().isFinished());
+			cell.getGame().setFinished();
 		}
-		System.out.println("isFinished: " + cell.getGame().isFinished());
+		cell.getGame().setFinished();
 		validateAndRepaint();
 	}
 

@@ -31,11 +31,12 @@ public class GameImpl implements Game
 
 	Set<GameListener>	listeners;
 	GameDifficulty		difficulty;
-	int					width, height, numMines;
+	int					numMines;
 	Point				dims;
 	List<List<Cell>>	cells;
 	int					secondsPassed;
 	boolean				started;
+	int					finished;
 
 	public GameImpl()
 	{
@@ -44,6 +45,7 @@ public class GameImpl implements Game
 		createBoard(10, 10, 9);
 		secondsPassed = 0;
 		started = false;
+		finished = 0;
 	}
 
 	public GameImpl(GameDifficulty difficulty, int width, int height,
@@ -51,8 +53,6 @@ public class GameImpl implements Game
 	{
 		this();
 		this.difficulty = difficulty;
-		this.width = width;
-		this.height = height;
 		this.numMines = numMines;
 
 		switch (difficulty)
@@ -106,6 +106,13 @@ public class GameImpl implements Game
 		}
 	}
 
+	// I want to distribute numMines across the board randomly.
+	// But then also need to make sure they have the correct co-ordinates
+	// and neighbour numbers. Therefore, split this into a four-stage process:
+	// 1. Create a 1D List and make the first numMines entries with mines
+	// 2. Shuffle this List to randomise mine position
+	// 3. Migrate the elements into a 2D List
+	// 4. Assign numbers for each element in the 2D List based on neighbours
 	@Override
 	public void createBoard(int width, int height, int numMines)
 	{
@@ -185,24 +192,43 @@ public class GameImpl implements Game
 	};
 
 	@Override
-	public int isFinished()
+	public void setFinished()
 	{
-		int openedMines = (int) cells.stream().flatMap(Collection::stream).filter(c -> c.isOpen() && c.isMine()).count();
+		// Already finished, no chance of changing
+		if (finished > 0)
+		{
+			return;
+		}
+
+		// A mine has been opened (lose game)
+		int openedMines = (int) cells.stream().flatMap(Collection::stream)
+				.filter(c -> c.isOpen() && c.isMine()).count();
 		if (openedMines > 1)
 		{
 			alertListeners(GameChangeType.LOSE);
-			return 2;
+			finished = 2;
+			return;
 		}
-		// TODO Auto-generated method stub (GameImpl.isFinished())
-		int a = (int) cells.stream().flatMap(Collection::stream).filter(c -> c.isOpen()).count();
-		System.out.println("There should be " + a + " opened cells?");
-		if (a == (dims.getX() * dims.getY() - numMines))
+
+		// The board has been revealed (win game)
+		int openCells = (int) cells.stream().flatMap(Collection::stream)
+				.filter(c -> c.isOpen()).count();
+		if (openCells == (dims.getX() * dims.getY() - numMines))
 		{
 			System.out.println("All non-mines are opened!");
 			alertListeners(GameChangeType.WIN);
-			return 1;
+			finished = 1;
+			return;
 		}
-		return 0;
+
+		// Nothing so far, not finished
+		finished = 0;
+	}
+
+	@Override
+	public int getFinished()
+	{
+		return finished;
 	}
 
 	@Override
@@ -252,6 +278,19 @@ public class GameImpl implements Game
 		return numMines - numPlacedFlags;
 	}
 
+	@Override
+	public boolean isStarted()
+	{
+		return started;
+	}
+
+	@Override
+	public void start()
+	{
+		System.err.println("GameImpl.start()");
+		started = true;
+	}
+	
 	@Override
 	public String toString()
 	{

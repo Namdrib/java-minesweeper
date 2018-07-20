@@ -46,16 +46,29 @@ public interface Game
 	public void removeListener(GameListener gl);
 
 	/**
+	 * Initialise the board to the specified size and number of mines. Also
+	 * populate the board with that number of mines and set all the Cell values.
+	 * <p>
+	 * Also sets each Cell's number based on neighbouring mines. For example, if
+	 * the Cell contains a mine, it should be -1. If there are two adjacent
+	 * mines, the number should be 2. If there are no adjacent mines, this
+	 * number should be 0. Rules:
+	 * <p>
+	 * <ul>
+	 * <li>width must be between 9 and 30 (inclusive)
+	 * <li>height must be between 9 and 24 (inclusive)
+	 * <li>numMines must be between 10 and (width-1)*(height-1) (inclusive)
+	 * <li>Attempts to set the size to anything else results in the offending
+	 * dimension being "clamped" to its appropriate range.
+	 * </ul>
+	 * <p>
 	 * 
 	 * @param width
-	 *            how many Cells wide the game will be
+	 *            requested board width (Cells)
 	 * @param height
-	 *            how many Cells high the game will be
+	 *            requested board height (Cells)
 	 * @param numMines
-	 *            how many Cells are mines
-	 * 
-	 * @see Board.init()
-	 * 
+	 *            requested board mine count (Cells with mines)
 	 */
 	public void createBoard(int width, int height, int numMines);
 
@@ -116,16 +129,33 @@ public interface Game
 	public int getSecondsPassed();
 
 	/**
-	 * Return a code signifying whether the game is finished. The return codes
-	 * are as follows:
+	 * Set <code>finished</code> to a code signifying the game state. The
+	 * <code>finished</code> codes are as follows:
 	 * <ul>
 	 * <li><code>0</code>: The game is ongoing
 	 * <li><code>1</code>: The game has been won (all non-mine Cells opened)
 	 * <li><code>2</code>: A mine has been exploded
 	 * </ul>
-	 * 
-	 * @return the return code
-	 * 
 	 */
-	public int isFinished();
+	public void setFinished();
+
+	/**
+	 * 
+	 * @return a code representing whether the game is finished, as set by
+	 *         <code>isFinishied()</code>
+	 * 
+	 * @see isFinished()
+	 */
+	public int getFinished();
+
+	/**
+	 * 
+	 * @return <code>true</code> if the game has started, <code>false</code> otherwise
+	 */
+	public boolean isStarted();
+	
+	/**
+	 * Called to start the game
+	 */
+	public void start();
 }
