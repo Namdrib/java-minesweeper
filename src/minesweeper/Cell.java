@@ -128,6 +128,11 @@ public interface Cell
 	public void toggleFlag();
 
 	/**
+	 * Set the Cell's flag state to a flag
+	 */
+	public void setFlag();
+
+	/**
 	 * If it is not already open, "open" the Cell by revealing what is
 	 * underneath. If it is empty (i.e. not a mine and does not have a number),
 	 * <code>open()</code> all of its neighbours (including diagonals). Opening

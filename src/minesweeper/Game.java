@@ -156,10 +156,11 @@ public interface Game
 
 	/**
 	 * 
-	 * @return <code>true</code> if the game has started, <code>false</code> otherwise
+	 * @return <code>true</code> if the game has started, <code>false</code>
+	 *         otherwise
 	 */
 	public boolean isStarted();
-	
+
 	/**
 	 * Called to start the game
 	 */

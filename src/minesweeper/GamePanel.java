@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -79,7 +80,7 @@ public class GamePanel extends JPanel implements GameListener
 
 		numMineLabels = new JLabel[3];
 		timerLabels = new JLabel[3];
-		for (int i=0; i<3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			numMineLabels[i] = new JLabel();
 			timerLabels[i] = new JLabel();
@@ -95,19 +96,21 @@ public class GamePanel extends JPanel implements GameListener
 
 		//-------------- testing HUD
 		JPanel hud = new JPanel(new BorderLayout());
-		hud.add(Box.createRigidArea(new Dimension(5, 0)), BorderLayout.LINE_START);
+		hud.add(Box.createRigidArea(new Dimension(5, 0)),
+				BorderLayout.LINE_START);
 
 		// add remaining mines (LINE_START)
 		numMinePanel = new JPanel();
 		numMinePanel
 				.setLayout(new BoxLayout(numMinePanel, BoxLayout.LINE_AXIS));
-		for (int i=0; i<numMineLabels.length; i++)
+		for (int i = 0; i < numMineLabels.length; i++)
 		{
-			numMineLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
+			numMineLabels[i] = new JLabel(
+					new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			numMinePanel.add(numMineLabels[i]);
 		}
-		numMinePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
-				Color.WHITE, Color.DARK_GRAY));
+		numMinePanel.setBorder(BorderFactory.createBevelBorder(
+				BevelBorder.LOWERED, Color.WHITE, Color.DARK_GRAY));
 		hud.add(numMinePanel, BorderLayout.LINE_START);
 
 		// add face (CENTER) TODO : turn into JLabel?
@@ -145,16 +148,16 @@ public class GamePanel extends JPanel implements GameListener
 		//			}
 		//		});
 
-		face = new JLabel(
-				new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
+		face = new JLabel(new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
 		hud.add(face, BorderLayout.CENTER);
 
 		// add timer (LINE_END)
 		timerPanel = new JPanel();
 		timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.LINE_AXIS));
-		for (int i=0; i<timerLabels.length; i++)
+		for (int i = 0; i < timerLabels.length; i++)
 		{
-			timerLabels[i] = new JLabel(new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
+			timerLabels[i] = new JLabel(
+					new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			timerPanel.add(timerLabels[i]);
 		}
 		timerPanel.setBorder(BorderFactory.createBevelBorder(
@@ -229,6 +232,11 @@ public class GamePanel extends JPanel implements GameListener
 			playSound(Global.SOUND_PATH + "win.mp3");
 		}
 		face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-win.png"));
+
+		// Flag all non-flagged mines
+		game.getCells().stream().flatMap(Collection::stream)
+				.filter(c -> c.isMine() && (c.getFlagState() != 1))
+				.forEach(c -> c.setFlag());
 	}
 
 	@Override

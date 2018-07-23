@@ -152,7 +152,6 @@ public class CellImpl implements Cell
 				case 0:
 					flagState = 1;
 					cellState = CellState.FLAG1;
-					// TODO : update GamePanel's hud
 					game.flagChanged();
 					break;
 				case 1:
@@ -166,7 +165,6 @@ public class CellImpl implements Cell
 						flagState = 0;
 						cellState = CellState.FLAG0;
 					}
-					// TODO : update GamePanel's hud
 					game.flagChanged();
 					break;
 				case 2:
@@ -176,6 +174,15 @@ public class CellImpl implements Cell
 			}
 			alertListeners();
 		}
+	}
+
+	@Override
+	public void setFlag()
+	{
+		flagState = 1;
+		cellState = CellState.FLAG1;
+		alertListeners();
+		game.flagChanged();
 	}
 
 	@Override
@@ -240,7 +247,8 @@ public class CellImpl implements Cell
 				// alertListeners();
 				System.err.println("CellImpl.open(): opening " + point);
 				// perform dfs on all unopened neighbours
-				game.getNeighboursOf(this).stream().filter(c -> !c.isOpen() && c.getFlagState() != 1)
+				game.getNeighboursOf(this).stream()
+						.filter(c -> !c.isOpen() && c.getFlagState() != 1)
 						.forEach(c -> c.open(false));
 			}
 		}

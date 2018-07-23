@@ -217,8 +217,8 @@ public class CellIcon extends JLabel implements CellListener
 
 	private void resetImageToCellState()
 	{
-		this.setIcon(new ImageIcon(
-				Global.IMAGE_PATH + cell.getCellState().toString().toLowerCase() + ".png"));
+		this.setIcon(new ImageIcon(Global.IMAGE_PATH
+				+ cell.getCellState().toString().toLowerCase() + ".png"));
 	}
 
 	@Override
