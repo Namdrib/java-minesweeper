@@ -105,6 +105,12 @@ public interface Game
 	public int getRemainingMines();
 
 	/**
+	 * Used to alert listeners that a flag has been changed. Should trigger
+	 * recalculation of <code>getRemainingMines()</code>
+	 */
+	public void flagChanged();
+
+	/**
 	 * Returns a copy so the board state can be observed but not changed
 	 * externally
 	 * 

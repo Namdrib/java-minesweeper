@@ -27,6 +27,7 @@ public class GameImpl implements Game
 		LOSE, // tile change (something to do with the board)
 		WIN, // other changes
 		TICK, // timing change
+		FLAG, // Cell flag changes
 	}
 
 	Set<GameListener>	listeners;
@@ -72,6 +73,7 @@ public class GameImpl implements Game
 			default:
 				break;
 		}
+		flagChanged();
 	}
 
 	public void addListener(GameListener gl)
@@ -100,6 +102,9 @@ public class GameImpl implements Game
 				break;
 			case TICK:
 				listeners.stream().forEach(e -> e.gameTick());
+				break;
+			case FLAG:
+				listeners.stream().forEach(e -> e.flagChanged());
 				break;
 			default:
 				return;
@@ -175,7 +180,7 @@ public class GameImpl implements Game
 	@Override
 	public void tick()
 	{
-		if (started)
+		if (started && finished == 0)
 		{
 			if (secondsPassed < 999)
 			{
@@ -197,13 +202,14 @@ public class GameImpl implements Game
 		// Already finished, no chance of changing
 		if (finished > 0)
 		{
+			System.out.println("GameImpl.setFinished(): early return");
 			return;
 		}
 
 		// A mine has been opened (lose game)
-		int openedMines = (int) cells.stream().flatMap(Collection::stream)
+		int openMines = (int) cells.stream().flatMap(Collection::stream)
 				.filter(c -> c.isOpen() && c.isMine()).count();
-		if (openedMines > 1)
+		if (openMines > 1)
 		{
 			alertListeners(GameChangeType.LOSE);
 			finished = 2;
@@ -223,6 +229,7 @@ public class GameImpl implements Game
 
 		// Nothing so far, not finished
 		finished = 0;
+		System.out.println("GameImpl.setFinished(): end");
 	}
 
 	@Override
@@ -279,6 +286,12 @@ public class GameImpl implements Game
 	}
 
 	@Override
+	public void flagChanged()
+	{
+		alertListeners(GameChangeType.FLAG);
+	}
+
+	@Override
 	public boolean isStarted()
 	{
 		return started;
@@ -290,7 +303,7 @@ public class GameImpl implements Game
 		System.err.println("GameImpl.start()");
 		started = true;
 	}
-	
+
 	@Override
 	public String toString()
 	{

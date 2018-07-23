@@ -152,6 +152,8 @@ public class CellImpl implements Cell
 				case 0:
 					flagState = 1;
 					cellState = CellState.FLAG1;
+					// TODO : update GamePanel's hud
+					game.flagChanged();
 					break;
 				case 1:
 					if (enableMarking)
@@ -164,6 +166,8 @@ public class CellImpl implements Cell
 						flagState = 0;
 						cellState = CellState.FLAG0;
 					}
+					// TODO : update GamePanel's hud
+					game.flagChanged();
 					break;
 				case 2:
 					flagState = 0;

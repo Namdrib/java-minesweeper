@@ -7,4 +7,6 @@ public interface GameListener
 	public void gameWin();
 	
 	public void gameTick();
+
+	public void flagChanged();
 }

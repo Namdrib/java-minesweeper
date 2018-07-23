@@ -15,6 +15,7 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -40,6 +41,8 @@ public class GamePanel extends JPanel implements GameListener
 	JPanel					numMinePanel;
 	JLabel[]				numMineLabels;
 	ImageIcon[]				numMineIcons;
+
+	JLabel					face;
 
 	JPanel					timerPanel;
 	JLabel[]				timerLabels;
@@ -128,20 +131,6 @@ public class GamePanel extends JPanel implements GameListener
 		//			}
 		//
 		//			@Override
-		//			public void mouseEntered(MouseEvent arg0)
-		//			{
-		//				// TODO Auto-generated method stub
-		//
-		//			}
-		//
-		//			@Override
-		//			public void mouseExited(MouseEvent arg0)
-		//			{
-		//				// TODO Auto-generated method stub
-		//
-		//			}
-		//
-		//			@Override
 		//			public void mousePressed(MouseEvent arg0)
 		//			{
 		//				// TODO Auto-generated method stub
@@ -156,7 +145,7 @@ public class GamePanel extends JPanel implements GameListener
 		//			}
 		//		});
 
-		JLabel face = new JLabel(
+		face = new JLabel(
 				new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
 		hud.add(face, BorderLayout.CENTER);
 
@@ -199,6 +188,7 @@ public class GamePanel extends JPanel implements GameListener
 				Color.WHITE, Color.DARK_GRAY));
 		//		this.add(cellField, BorderLayout.CENTER);
 		this.add(cellField);
+		flagChanged();
 
 		//-------------- testing cellField
 		this.setBorder(new LineBorder(new Color(192, 192, 192), 6));
@@ -223,39 +213,48 @@ public class GamePanel extends JPanel implements GameListener
 	@Override
 	public void gameLose()
 	{
-		// TODO Auto-generated method stub (GamePanel.tileChanged())
-		// TODO if game is finished, do a thing?
 		System.out.println(game.getRemainingMines() + " mines left");
 		if (minesweeper.enableSound)
 		{
 			playSound(Global.SOUND_PATH + "lose.mp3");
 		}
+		face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-lose.png"));
 	}
 
 	@Override
 	public void gameWin()
 	{
-		// TODO Auto-generated method stub (GamePanel.otherChanged())
 		if (minesweeper.enableSound)
 		{
 			playSound(Global.SOUND_PATH + "win.mp3");
 		}
+		face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-win.png"));
 	}
 
 	@Override
 	public void gameTick()
 	{
-		String timeStr = String.format("%03d", game.getSecondsPassed());
-		System.out.println("Time changed to " + timeStr);
+		String s = String.format("%03d", game.getSecondsPassed());
 		if (minesweeper.enableSound)
 		{
 			playSound(Global.SOUND_PATH + "tick.mp3");
 		}
-		for (int i = 0; i < timeStr.length(); i++)
+		for (int i = 0; i < s.length(); i++)
 		{
-			String img = Global.IMAGE_PATH + "hud" + timeStr.charAt(i) + ".png";
-			System.out.println(img);
+			String img = Global.IMAGE_PATH + "hud" + s.charAt(i) + ".png";
 			timerLabels[i].setIcon(new ImageIcon(img));
+		}
+	}
+
+	@Override
+	public void flagChanged()
+	{
+		String s = String.format("%03d", game.getRemainingMines());
+		System.out.println("remaining mines changed to " + s);
+		for (int i = 0; i < s.length(); i++)
+		{
+			String img = Global.IMAGE_PATH + "hud" + s.charAt(i) + ".png";
+			numMineLabels[i].setIcon(new ImageIcon(img));
 		}
 	}
 

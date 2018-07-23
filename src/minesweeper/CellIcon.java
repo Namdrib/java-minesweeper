@@ -21,9 +21,10 @@ public class CellIcon extends JLabel implements CellListener
 
 		private void pressCellIcon()
 		{
-			CellIcon.this.setIcon(new ImageIcon(Global.IMAGE_PATH + "open0.png"));
+			CellIcon.this
+					.setIcon(new ImageIcon(Global.IMAGE_PATH + "open0.png"));
 		}
-		
+
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
@@ -216,8 +217,8 @@ public class CellIcon extends JLabel implements CellListener
 
 	private void resetImageToCellState()
 	{
-		this.setIcon(new ImageIcon(Global.IMAGE_PATH
-				+ cell.getCellState().toString() + ".png"));
+		this.setIcon(new ImageIcon(
+				Global.IMAGE_PATH + cell.getCellState().toString() + ".png"));
 	}
 
 	@Override
@@ -226,14 +227,10 @@ public class CellIcon extends JLabel implements CellListener
 		System.err.print("Cell changed: ");
 		resetImageToCellState();
 
-		System.err
-				.println(cell.getPoint() + " to " + getIcon().toString());
-		
-		if (cell.isOpen() && cell.isMine())
-		{
-			cell.getGame().setFinished();
-		}
+		System.err.println(cell.getPoint() + " to " + getIcon().toString());
+
 		cell.getGame().setFinished();
+
 		validateAndRepaint();
 	}
 
