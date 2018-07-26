@@ -15,14 +15,50 @@ public class CellIcon extends JLabel implements CellListener
 	// Use Board.getRemainingMines() for middle click
 	private class CellIconMouseListener extends MouseInputAdapter
 	{
-		boolean	leftDown	= false;
-		boolean	middleDown	= false;
-		boolean	rightDown	= false;
+		boolean		leftDown	= false;
+		boolean		rightDown	= false;
+		boolean		chording	= false;
+		final int	doubleClick	= MouseEvent.BUTTON1_DOWN_MASK
+				| MouseEvent.BUTTON3_DOWN_MASK;
 
 		private void pressCellIcon()
 		{
 			CellIcon.this
 					.setIcon(new ImageIcon(Global.IMAGE_PATH + "open0.png"));
+		}
+
+		/**
+		 * 
+		 * @param e
+		 *            a MouseEvent pass in from one of the overridden methods
+		 * 
+		 * @return <code>true</code> if the current state of of the mouse
+		 *         activates chording, <code>false</code> otherwise
+		 */
+		private boolean isChording(MouseEvent e)
+		{
+			boolean chording = false;
+			chording |= (true);
+			return chording;
+		}
+
+		/**
+		 * A chord action is to open all non-mine squares around a CellIcon's
+		 * Cell. The opening action should be indirect
+		 */
+		private void chord()
+		{
+			if (CellIcon.this.cell.isOpen())
+			{
+				Set<Cell> neighbours = CellIcon.this.cell.getGame()
+						.getNeighboursOf(CellIcon.this.cell);
+				int neighbouringFlags = (int) neighbours.stream()
+						.filter(c -> c.getFlagState() == 1).count();
+				if (neighbouringFlags == CellIcon.this.cell.getNumber())
+				{
+					neighbours.stream().forEach(c -> c.open(false));
+				}
+			}
 		}
 
 		@Override
@@ -34,28 +70,31 @@ public class CellIcon extends JLabel implements CellListener
 			}
 			if (cell.isOpen())
 			{
-				return;
+				if (e.getModifiersEx() == doubleClick)
+				{
+					System.out.println("WE CHORDING!");
+					chording = true;
+				}
+				if (cell.getNumber() > 0)
+				{
+					return;
+				}
 			}
 
-//			if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) > 0)
-//			{
-//				cell.toggleFlag();
-//			}
 			int btn = e.getButton();
 			switch (btn)
 			{
 				case MouseEvent.BUTTON1:
 					// "push" the Cell down but don't do anything yet
-					System.out.println("CellIcon: left mouse pressed");
+					System.out.println("CellIcon: left pressed " + e.getModifiersEx());
 					leftDown = true;
 					pressCellIcon();
 					break;
 				case MouseEvent.BUTTON2:
-					System.out.println("CellIcon: middle mouse pressed");
-					middleDown = true;
+					System.out.println("CellIcon: middle pressed " + e.getModifiers());
 					break;
 				case MouseEvent.BUTTON3:
-					System.out.println("CellIcon: right mouse pressed");
+					System.out.println("CellIcon: right pressed " + e.getModifiersEx());
 					cell.toggleFlag();
 					rightDown = true;
 					break;
@@ -76,6 +115,9 @@ public class CellIcon extends JLabel implements CellListener
 			validateAndRepaint();
 		}
 
+		/**
+		 * When releasing from a chord, unpress both left and right
+		 */
 		@Override
 		public void mouseReleased(MouseEvent e)
 		{
@@ -88,33 +130,29 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				case MouseEvent.BUTTON1:
 					// "push" the Cell down but don't do anything yet
-					System.out.println(
-							"CellIcon: left mouse released, " + leftDown);
-					if (leftDown)
+					System.out.println("CellIcon: release left " + leftDown);
+					if (chording)
 					{
-						System.out.println("Open it");
+						chord();
+						chording = false;
+					}
+					else if ((e.getModifiers() | MouseEvent.BUTTON1) > 0)
+					{
 						cell.open(true);
 					}
 					leftDown = false;
 					break;
 				case MouseEvent.BUTTON2:
-					System.out.println("CellIcon: middle mouse released");
-					middleDown = false;
-					// if enough mines, open each neighbour
-					if (CellIcon.this.cell.isOpen())
-					{
-						Set<Cell> neighbours = CellIcon.this.cell.getGame()
-								.getNeighboursOf(CellIcon.this.cell);
-						int neighbouringFlags = (int) neighbours.stream()
-								.filter(c -> c.getFlagState() == 1).count();
-						if (neighbouringFlags == CellIcon.this.cell.getNumber())
-						{
-							neighbours.stream().forEach(c -> c.open(false));
-						}
-					}
+					System.out.println("CellIcon: release middle");
+					chord();
 					break;
 				case MouseEvent.BUTTON3:
-					System.out.println("CellIcon: right mouse released");
+					System.out.println("CellIcon: release right");
+					if (chording)
+					{
+						chord();
+						chording = false;
+					}
 					rightDown = false;
 					break;
 				default:
@@ -135,24 +173,27 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				return;
 			}
+			if (isChording(e))
+			{
+				chording = true;
+			}
 
 			if (e.getModifiers() == MouseEvent.BUTTON1_MASK)
 			{
-				System.out.println("Entered with left click");
+				System.out.println("CellIcon: enter left");
 				leftDown = true;
 				pressCellIcon();
 				validateAndRepaint();
 			}
 			if (e.getModifiers() == MouseEvent.BUTTON2_MASK)
 			{
-				System.out.println("Entered with middle click");
-				middleDown = true;
+				System.out.println("CellIcon: enter middle");
 				pressCellIcon();
 				validateAndRepaint();
 			}
 			if (e.getModifiers() == MouseEvent.BUTTON3_MASK)
 			{
-				System.out.println("Entered with right click");
+				System.out.println("CellIcon: enter right");
 				rightDown = true;
 			}
 		}
@@ -165,8 +206,8 @@ public class CellIcon extends JLabel implements CellListener
 				return;
 			}
 			leftDown = false;
-			middleDown = false;
 			rightDown = false;
+			chording = false;
 			if (CellIcon.this.cell.isOpen()
 					|| CellIcon.this.cell.getFlagState() == 1)
 			{
@@ -178,7 +219,7 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				CellIcon.this.resetImageToCellState();
 				System.out.println(
-						"CellIcon: Exited: " + leftDown + " | " + middleDown);
+						"CellIcon: Exited: " + leftDown + " | " + rightDown);
 				validateAndRepaint();
 			}
 		}
