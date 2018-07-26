@@ -87,6 +87,10 @@ public class CellIcon extends JLabel implements CellListener
 				case MouseEvent.BUTTON1:
 					// "push" the Cell down but don't do anything yet
 					System.out.println("CellIcon: left pressed " + e.getModifiersEx());
+					if (CellIcon.this.cell.getFlagState() == 1)
+					{
+						break;
+					}
 					leftDown = true;
 					pressCellIcon();
 					break;
