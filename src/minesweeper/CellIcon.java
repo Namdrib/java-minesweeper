@@ -95,7 +95,14 @@ public class CellIcon extends JLabel implements CellListener
 					break;
 				case MouseEvent.BUTTON3:
 					System.out.println("CellIcon: right pressed " + e.getModifiersEx());
-					cell.toggleFlag();
+					if (leftDown)
+					{
+						chording = true;
+					}
+					else
+					{
+						cell.toggleFlag();
+					}
 					rightDown = true;
 					break;
 				default:
@@ -135,9 +142,12 @@ public class CellIcon extends JLabel implements CellListener
 					{
 						chord();
 						chording = false;
+						leftDown = false;
+						rightDown = false;
 					}
-					else if ((e.getModifiers() | MouseEvent.BUTTON1) > 0)
+					else if (leftDown)
 					{
+						System.out.println("Release left down");
 						cell.open(true);
 					}
 					leftDown = false;
@@ -152,6 +162,8 @@ public class CellIcon extends JLabel implements CellListener
 					{
 						chord();
 						chording = false;
+						leftDown = false;
+						rightDown = false;
 					}
 					rightDown = false;
 					break;
@@ -172,10 +184,6 @@ public class CellIcon extends JLabel implements CellListener
 			if (cell.isOpen() || cell.getFlagState() == 1)
 			{
 				return;
-			}
-			if (isChording(e))
-			{
-				chording = true;
 			}
 
 			if (e.getModifiers() == MouseEvent.BUTTON1_MASK)
