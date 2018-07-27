@@ -28,6 +28,8 @@ import javax.swing.event.MouseInputAdapter;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import minesweeper.ThickBevelBorder;
+
 /**
  * 
  * @author Namdrib
@@ -94,11 +96,7 @@ public class GamePanel extends JPanel implements GameListener
 		this.game = game;
 		this.minesweeper = minesweeper;
 
-		//-------------- testing HUD
-		JPanel hud = new JPanel(new BorderLayout());
-		hud.add(Box.createRigidArea(new Dimension(5, 0)),
-				BorderLayout.LINE_START);
-
+		// Create HUD
 		// add remaining mines (LINE_START)
 		numMinePanel = new JPanel();
 		numMinePanel
@@ -109,9 +107,8 @@ public class GamePanel extends JPanel implements GameListener
 					new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			numMinePanel.add(numMineLabels[i]);
 		}
-		numMinePanel.setBorder(BorderFactory.createBevelBorder(
-				BevelBorder.LOWERED, Color.WHITE, Color.DARK_GRAY));
-		hud.add(numMinePanel, BorderLayout.LINE_START);
+		numMinePanel
+				.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 1));
 
 		// add face (CENTER) TODO : turn into JLabel?
 		//		JButton face = new JButton(".",
@@ -149,7 +146,6 @@ public class GamePanel extends JPanel implements GameListener
 		//		});
 
 		face = new JLabel(new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
-		hud.add(face, BorderLayout.CENTER);
 
 		// add timer (LINE_END)
 		timerPanel = new JPanel();
@@ -160,20 +156,35 @@ public class GamePanel extends JPanel implements GameListener
 					new ImageIcon(Global.IMAGE_PATH + "hud0.png"));
 			timerPanel.add(timerLabels[i]);
 		}
-		timerPanel.setBorder(BorderFactory.createBevelBorder(
-				BevelBorder.LOWERED, Color.WHITE, Color.DARK_GRAY));
+		timerPanel.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 1));
+
+		// Add everything to the HUD
+		JPanel hud = new JPanel(new BorderLayout());
+		hud.add(numMinePanel, BorderLayout.LINE_START);
+		hud.add(face, BorderLayout.CENTER);
 		hud.add(timerPanel, BorderLayout.LINE_END);
-
 		hud.setBackground(new Color(192, 192, 192));
-		hud.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
-				Color.WHITE, Color.DARK_GRAY));
 
-		this.add(hud);
-		//-------------- testing HUD
+		// Add a thing around the hud so there's some space
+		JPanel hudContainer = new JPanel();
+		hudContainer.setBackground(Color.LIGHT_GRAY);
+		hudContainer.setLayout(new BorderLayout());
+		hudContainer.add(Box.createRigidArea(new Dimension(0, 4)),
+				BorderLayout.NORTH);
+		hudContainer.add(Box.createRigidArea(new Dimension(0, 4)),
+				BorderLayout.SOUTH);
+		hudContainer.add(Box.createRigidArea(new Dimension(5, 0)),
+				BorderLayout.WEST);
+		hudContainer.add(Box.createRigidArea(new Dimension(5, 0)),
+				BorderLayout.EAST);
+		hudContainer.add(hud, BorderLayout.CENTER);
+		hudContainer
+				.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 2));
+		this.add(hudContainer);
 
 		this.add(Box.createRigidArea(new Dimension(0, 5)));
 
-		//-------------- testing cellField
+		// Create cell field
 		Point p = game.getDimensions();
 		int xButtons = (int) p.getX();
 		int yButtons = (int) p.getY();
@@ -187,13 +198,10 @@ public class GamePanel extends JPanel implements GameListener
 				cellField.add(a);
 			}
 		}
-		cellField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,
-				Color.WHITE, Color.DARK_GRAY));
-		//		this.add(cellField, BorderLayout.CENTER);
+		cellField.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 3));
 		this.add(cellField);
 		flagChanged();
 
-		//-------------- testing cellField
 		this.setBorder(new LineBorder(new Color(192, 192, 192), 6));
 	}
 
