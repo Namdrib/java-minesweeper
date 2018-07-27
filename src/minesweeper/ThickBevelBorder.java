@@ -1,22 +1,12 @@
 package minesweeper;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.AbstractBorder;
 
 /**
@@ -134,15 +124,6 @@ public class ThickBevelBorder extends AbstractBorder
 		g2.setColor(getBottomRightColour());
 		g2.fill(bottomRightPolygon);
 		g2.draw(bottomRightPolygon);
-
-		// TODO : remove me
-		// put points into the corners
-		g2.setColor(Color.MAGENTA);
-		g2.fillRect(0, 0, 1, 1);
-		g2.fillRect(0, height - 2, 1, 1);
-		g2.fillRect(width - 2, 0, 1, 1);
-		g2.fillRect(width - 2, height - 2, 1, 1);
-
 		g2.dispose();
 	}
 
@@ -161,34 +142,5 @@ public class ThickBevelBorder extends AbstractBorder
 			polygon.addPoint(point.x, point.y);
 		}
 		return polygon;
-	}
-
-	public static void main(String[] args)
-	{
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-
-		for (int i = 1; i < 8; i++)
-		{
-			JPanel p = new JPanel() {
-				@Override
-				public Dimension getPreferredSize()
-				{
-					return new Dimension(200, 60);
-				}
-			};
-			p.setBorder(new ThickBevelBorder(Color.RED, Color.GREEN, i));
-			panel.add(p);
-			panel.add(Box.createRigidArea(new Dimension(0, 10)));
-		}
-
-		frame.add(panel);
-
-		frame.pack();
-		frame.setVisible(true);
 	}
 }
