@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.event.MouseInputAdapter;
 
@@ -85,7 +86,6 @@ public class GamePanel extends JPanel implements GameListener
 		}
 	}
 
-	// TODO : Create custom bevel border to allow thicknesses
 	public GamePanel(Game game, Minesweeper minesweeper)
 	{
 		this();
@@ -220,7 +220,6 @@ public class GamePanel extends JPanel implements GameListener
 	@Override
 	public void gameLose()
 	{
-		System.out.println(game.getRemainingMines() + " mines left");
 		if (minesweeper.enableSound)
 		{
 			playSound(Global.SOUND_PATH + "lose.mp3");
@@ -241,6 +240,8 @@ public class GamePanel extends JPanel implements GameListener
 		game.getCells().stream().flatMap(Collection::stream)
 				.filter(c -> c.isMine() && (c.getFlagState() != 1))
 				.forEach(c -> c.setFlag());
+
+		minesweeper.checkBestTime();
 	}
 
 	@Override
@@ -262,7 +263,6 @@ public class GamePanel extends JPanel implements GameListener
 	public void flagChanged()
 	{
 		String s = String.format("%03d", game.getRemainingMines());
-		System.out.println("remaining mines changed to " + s);
 		for (int i = 0; i < s.length(); i++)
 		{
 			String img = Global.IMAGE_PATH + "hud" + s.charAt(i) + ".png";

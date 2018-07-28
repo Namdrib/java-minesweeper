@@ -202,7 +202,6 @@ public class GameImpl implements Game
 		// Already finished, no chance of changing
 		if (finished > 0)
 		{
-			System.out.println("GameImpl.setFinished(): early return");
 			return;
 		}
 
@@ -211,8 +210,8 @@ public class GameImpl implements Game
 				.filter(c -> c.isOpen() && c.isMine()).count();
 		if (openMines > 1)
 		{
-			alertListeners(GameChangeType.LOSE);
 			finished = 2;
+			alertListeners(GameChangeType.LOSE);
 			return;
 		}
 
@@ -221,15 +220,13 @@ public class GameImpl implements Game
 				.filter(c -> c.isOpen()).count();
 		if (openCells == (dims.getX() * dims.getY() - numMines))
 		{
-			System.out.println("All non-mines are opened!");
-			alertListeners(GameChangeType.WIN);
 			finished = 1;
+			alertListeners(GameChangeType.WIN);
 			return;
 		}
 
 		// Nothing so far, not finished
 		finished = 0;
-		System.out.println("GameImpl.setFinished(): end");
 	}
 
 	@Override
@@ -300,7 +297,6 @@ public class GameImpl implements Game
 	@Override
 	public void start()
 	{
-		System.err.println("GameImpl.start()");
 		started = true;
 	}
 

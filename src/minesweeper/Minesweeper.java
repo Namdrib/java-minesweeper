@@ -439,6 +439,44 @@ public class Minesweeper
 				options, options[0]);
 	}
 
+	/**
+	 * Check whether the time taken and difficulty of the current game is the
+	 * fastest for its difficulty. If so, prompt for the user to enter a name
+	 * and record the score. Then display the best time.
+	 * 
+	 * @param timeTaken
+	 */
+	public void checkBestTime()
+	{
+		// Only proceed if the game is won
+		if (game.getFinished() != 1)
+		{
+			System.out.println("CheckBestTime: not finished");
+			return;
+		}
+
+		GameDifficulty difficulty = game.getDifficulty();
+		int time = game.getSecondsPassed();
+		if (difficulty == GameDifficulty.CUSTOM
+				|| time >= bestTimes.get(difficulty))
+		{
+			System.out.println("CheckBestTime: diff or time");
+			return;
+		}
+
+		// Create prompt for time. Just ask for name
+		String prompt = "You have the fastest time for the beginner level.\nPlease enter your name";
+		String s = (String) JOptionPane.showInputDialog(frame, prompt, null,
+				JOptionPane.PLAIN_MESSAGE, null, null, "Anonymous");
+		if (s != null)
+		{
+			System.out.println("Recv'd name is " + s);
+			bestNames.put(difficulty, s);
+		}
+		bestTimes.put(difficulty, time);
+		showBestTimes();
+	}
+
 	private void showAbout()
 	{
 		String out = "Java port of Windows XP Minesweeper by Namdrib (version "
