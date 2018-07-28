@@ -413,7 +413,10 @@ public class Minesweeper
 		{
 			if (gd != GameDifficulty.CUSTOM)
 			{
-				sb.append(gd.toString() + ": ").append(bestTimes.get(gd))
+				String difficultyStr = gd.toString().substring(0, 1)
+						.toUpperCase()
+						+ gd.toString().substring(1).toLowerCase();
+				sb.append(difficultyStr + ": ").append(bestTimes.get(gd))
 						.append(" seconds " + bestNames.get(gd) + "\n");
 			}
 		}
@@ -462,9 +465,12 @@ public class Minesweeper
 
 		// Create prompt for time. Just ask for name
 		// TODO : Have so only 1 prompt button "OK"
-		String prompt = "You have the fastest time for the beginner level.\nPlease enter your name";
+		String prompt = "You have the fastest time for the "
+				+ difficulty.toString().toLowerCase()
+				+ " level.\nPlease enter your name";
 		String s = (String) JOptionPane.showInputDialog(frame, prompt, null,
-				JOptionPane.PLAIN_MESSAGE, null, null, "Anonymous");
+				JOptionPane.PLAIN_MESSAGE, null, null,
+				bestNames.get(difficulty));
 		if (s != null)
 		{
 			System.out.println("Recv'd name is " + s);
