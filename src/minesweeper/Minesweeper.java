@@ -5,11 +5,13 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -69,31 +71,33 @@ public class Minesweeper
 		}
 	}
 
-	String					version	= "0.5.0";
+	String								version		= "0.5.0";
 
 	// UI elements
-	JFrame					frame;
-	JMenuBar				menuBar;
-	JMenu					menu;
-	JMenuItem				menuItem;
-	JRadioButtonMenuItem	rbMenuItem;
-	JCheckBoxMenuItem		markingMenuItem;
-	JCheckBoxMenuItem		colourMenuItem;
-	JCheckBoxMenuItem		soundMenuItem;
+	JFrame								frame;
+	JCheckBoxMenuItem					markingMenuItem;
+	JCheckBoxMenuItem					colourMenuItem;
+	JCheckBoxMenuItem					soundMenuItem;
 
 	// Game stuff
-	Game					game;
-	GamePanel				gamePanel;
-	GameDifficulty			difficulty;				// base on menus
-	int						width, height, numMines;
+	Game								game;
+	GamePanel							gamePanel;
+	GameDifficulty						difficulty;					// base on menus
+	int									width, height, numMines;
 
 	// Timing stuff
-	Timer					timer;
-	Ticker					ticker;
+	Timer								timer;
+	Ticker								ticker;
 
-	boolean					enableMarking;
-	boolean					enableColour;
-	boolean					enableSound;
+	boolean								enableMarking;
+	boolean								enableColour;
+	boolean								enableSound;
+
+	// Best time stuff
+	int									defaultTime	= 999;
+	String								defaultName	= "Anonymous";
+	HashMap<GameDifficulty, Integer>	bestTimes;
+	HashMap<GameDifficulty, String>		bestNames;
 
 	/**
 	 * 
@@ -119,6 +123,7 @@ public class Minesweeper
 				new ImageIcon(Global.IMAGE_PATH + "logo-full-small.png")
 						.getImage());
 		addMenuThings();
+		resetBestTimes();
 
 		difficulty = GameDifficulty.BEGINNER;
 		resetGame();
@@ -143,6 +148,11 @@ public class Minesweeper
 
 	private void addMenuThings()
 	{
+		JMenuBar menuBar;
+		JMenu menu;
+		JMenuItem menuItem;
+		JRadioButtonMenuItem rbMenuItem;
+
 		// Set up the menu things
 		menuBar = new JMenuBar();
 		menu = new JMenu("Game");
@@ -305,9 +315,9 @@ public class Minesweeper
 
 		menu.addSeparator();
 
-		// File -> Best Times... : Shows high scores / best times
+		// File -> Best Times... : Shows best times
 		menuItem = createJMenuItem("Best Times...", KeyEvent.VK_T,
-				"Shows high scores / best times");
+				"Shows best times");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -380,10 +390,53 @@ public class Minesweeper
 		frame.setVisible(true);
 	}
 
-	// TODO : Write best times to a file? Or keep locally
+	/**
+	 * Reset the the times and names of each best time
+	 */
+	private void resetBestTimes()
+	{
+		bestTimes = new HashMap<>();
+		bestNames = new HashMap<>();
+		for (GameDifficulty gd : GameDifficulty.values())
+		{
+			if (gd != GameDifficulty.CUSTOM)
+			{
+				bestTimes.put(gd, defaultTime);
+				bestNames.put(gd, defaultName);
+			}
+		}
+	}
+
+	/**
+	 * Show the best times
+	 */
 	private void showBestTimes()
 	{
-		;
+		StringBuilder sb = new StringBuilder();
+		for (GameDifficulty gd : GameDifficulty.values())
+		{
+			if (gd != GameDifficulty.CUSTOM)
+			{
+				sb.append(gd.toString() + ": ").append(bestTimes.get(gd))
+						.append(" seconds " + bestNames.get(gd) + "\n");
+			}
+		}
+		String text = sb.toString();
+
+		JButton resetButton = new JButton("Reset Scores");
+		resetButton.setEnabled(true);
+		resetButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				resetBestTimes();
+			}
+		});
+
+		Object[] options = { resetButton, "OK" };
+		JOptionPane.showOptionDialog(frame, text, "Fastest Mine Sweepers",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				options, options[0]);
 	}
 
 	private void showAbout()
