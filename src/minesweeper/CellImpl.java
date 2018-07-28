@@ -19,7 +19,7 @@ public class CellImpl implements Cell
 	int					flagState;
 	int					number;
 	boolean				isOpen;
-	boolean				enableMarking;	// TODO : replace with a Game option?
+	boolean				marking;
 
 	// Not sure if I need this:
 	// Keeping track of the game and its position within the game
@@ -34,7 +34,7 @@ public class CellImpl implements Cell
 		flagState = 0;
 		number = 0;
 		isOpen = false;
-		enableMarking = true;
+		marking = true;
 		listeners = new HashSet<>();
 	}
 
@@ -138,7 +138,7 @@ public class CellImpl implements Cell
 	@Override
 	public void setMarking(boolean marking)
 	{
-		enableMarking = marking;
+		this.marking = marking;
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class CellImpl implements Cell
 					game.flagChanged();
 					break;
 				case 1:
-					if (enableMarking)
+					if (marking)
 					{
 						flagState = 2;
 						cellState = CellState.FLAG2;
@@ -224,7 +224,6 @@ public class CellImpl implements Cell
 		// TODO : extend to make a safe "lake"
 		if (isMine())
 		{
-			// TODO : report to Game that a mine has been opened
 			System.err.println("CellImpl.open(): Landed on a mine at " + point);
 			cellState = ((direct) ? CellState.MINE2 : CellState.MINE1);
 

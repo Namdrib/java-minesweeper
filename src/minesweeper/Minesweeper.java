@@ -291,7 +291,7 @@ public class Minesweeper
 		colourMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO
+				// TODO : colour
 				enableColour = colourMenuItem.isSelected();
 				System.out.println("Toggle colour: " + enableColour);
 			}
@@ -305,7 +305,6 @@ public class Minesweeper
 		soundMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO
 				enableSound = soundMenuItem.isSelected();
 				System.out.println("Toggle sound: " + enableSound);
 			}
@@ -321,8 +320,6 @@ public class Minesweeper
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO
-				System.out.println("Best Times...");
 				showBestTimes();
 			}
 		});
@@ -352,7 +349,6 @@ public class Minesweeper
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO
 				System.out.println("About Minesweeper...");
 				showAbout();
 			}
@@ -435,7 +431,7 @@ public class Minesweeper
 
 		Object[] options = { resetButton, "OK" };
 		JOptionPane.showOptionDialog(frame, text, "Fastest Mine Sweepers",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				options, options[0]);
 	}
 
@@ -465,6 +461,7 @@ public class Minesweeper
 		}
 
 		// Create prompt for time. Just ask for name
+		// TODO : Have so only 1 prompt button "OK"
 		String prompt = "You have the fastest time for the beginner level.\nPlease enter your name";
 		String s = (String) JOptionPane.showInputDialog(frame, prompt, null,
 				JOptionPane.PLAIN_MESSAGE, null, null, "Anonymous");

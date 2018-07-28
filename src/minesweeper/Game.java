@@ -10,8 +10,6 @@ import java.util.Set;
  *
  *         Keeps track of the Cells and the timing information associated with
  *         the game
- *         <p>
- *         TODO : This information is used to set high scores (when implemented)
  *
  */
 public interface Game
