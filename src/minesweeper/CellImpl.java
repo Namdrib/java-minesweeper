@@ -195,6 +195,7 @@ public class CellImpl implements Cell
 			System.err.println("CellImpl.open(): early return (open)");
 			return;
 		}
+
 		// Cannot directly open if the Cell is flagged or marked
 		// however, can directly open (e.g. via middle click or end-of-game reveal)
 		if (flagState == 1)
@@ -206,14 +207,15 @@ public class CellImpl implements Cell
 				isOpen = true;
 				alertListeners();
 			}
-			else
-			{
-				System.err.println("CellImpl.open(): early return (flagged)");
-			}
 			return;
 		}
 		if (!getGame().isStarted())
 		{
+			// If the first click is on a mine, relocate it
+			if (isMine())
+			{
+				game.relocateMine(this);
+			}
 			getGame().start();
 		}
 

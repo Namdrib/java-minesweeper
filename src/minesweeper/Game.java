@@ -103,6 +103,21 @@ public interface Game
 	public int getRemainingMines();
 
 	/**
+	 * Move the mine located at <code>cell</code> to the top-left Cell. If the
+	 * top-left Cell already has a mine, relocate it to the next one to the
+	 * right, and so on, until a free spot is found. If the first free Cell to
+	 * be found is <code>cell</code>, skip it.
+	 * <p>
+	 * e.g. if <code>cell</code> is at position (1, 0), and there is a mine at
+	 * (0, 0), then move the mine to (2, 0). If (2, 0) already has a mine, move
+	 * it to (3, 0).
+	 * 
+	 * @param cell
+	 *            whose mine needs a relocation
+	 */
+	public void relocateMine(Cell cell);
+
+	/**
 	 * Used to alert listeners that a flag has been changed. Should trigger
 	 * recalculation of <code>getRemainingMines()</code>
 	 */

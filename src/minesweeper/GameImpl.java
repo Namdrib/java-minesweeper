@@ -283,6 +283,37 @@ public class GameImpl implements Game
 	}
 
 	@Override
+	public void relocateMine(Cell cell)
+	{
+		System.out.println("Safe click");
+
+		// Relocate the mine
+		relocation: for (int i = 0; i < cells.size(); i++)
+		{
+			for (int j = 0; j < cells.get(0).size(); j++)
+			{
+				Cell temp = cells.get(i).get(j);
+
+				if (!temp.isMine())
+				{
+					// Make temp a mine, update its neighbours counts
+					temp.setNumber(-1);
+					getNeighboursOf(temp).stream().filter(c -> !c.isMine())
+							.forEach(c -> c.setNumber(c.getNumber() + 1));
+					break relocation;
+				}
+			}
+		}
+
+		// Update cell number
+		cell.setNumber((int) getNeighboursOf(cell).stream()
+				.filter(c -> c.isMine()).count());
+		// Update neighbours of cell
+		getNeighboursOf(cell).stream().filter(c -> !c.isMine())
+				.forEach(c -> c.setNumber(c.getNumber() - 1));
+	}
+
+	@Override
 	public void flagChanged()
 	{
 		alertListeners(GameChangeType.FLAG);

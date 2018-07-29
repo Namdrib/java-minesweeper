@@ -168,7 +168,6 @@ public class Minesweeper
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println("New game!");
 				resetGame();
 			}
 		});
