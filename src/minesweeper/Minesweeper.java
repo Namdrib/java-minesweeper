@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -404,11 +405,15 @@ public class Minesweeper
 	}
 
 	/**
-	 * Show the best times
+	 * The text is to be used in a JLabel's text field, so to display new lines,
+	 * requires use of HTML tags with <code><br></code> to emulate new lines.
+	 * 
+	 * @return a HTML string representing the best scores as above.
 	 */
-	private void showBestTimes()
+	private String getBestTimesText()
 	{
 		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
 		for (GameDifficulty gd : GameDifficulty.values())
 		{
 			if (gd != GameDifficulty.CUSTOM)
@@ -417,24 +422,36 @@ public class Minesweeper
 						.toUpperCase()
 						+ gd.toString().substring(1).toLowerCase();
 				sb.append(difficultyStr + ": ").append(bestTimes.get(gd))
-						.append(" seconds " + bestNames.get(gd) + "\n");
+						.append(" seconds " + bestNames.get(gd) + "<br>");
 			}
 		}
-		String text = sb.toString();
+		sb.append("</html>");
+		return sb.toString();
+	}
 
+	/**
+	 * Show the best times. Display two buttons: "Reset Scores" and "OK". Reset
+	 * Scores should return each best time/name combination to the default and
+	 * update the display.
+	 */
+	private void showBestTimes()
+	{
+		JLabel text = new JLabel(getBestTimesText(), JLabel.CENTER);
 		JButton resetButton = new JButton("Reset Scores");
 		resetButton.setEnabled(true);
 		resetButton.addActionListener(new ActionListener() {
+			// Setting the JLabel's text repaints it
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				resetBestTimes();
+				text.setText(getBestTimesText());
 			}
 		});
 
 		Object[] options = { resetButton, "OK" };
 		JOptionPane.showOptionDialog(frame, text, "Fastest Mine Sweepers",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
 				options, options[0]);
 	}
 
