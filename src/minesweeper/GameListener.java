@@ -1,12 +1,11 @@
 package minesweeper;
 
-public interface GameListener
-{
-	public void gameLose();
+public interface GameListener {
+  public void gameLose();
 
-	public void gameWin();
-	
-	public void gameTick();
+  public void gameWin();
 
-	public void flagChanged();
+  public void gameTick();
+
+  public void flagChanged();
 }
