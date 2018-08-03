@@ -136,6 +136,10 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				return;
 			}
+			if (leftDown && (e.getModifiersEx() & MouseEvent.BUTTON1_MASK) != 0)
+			{
+				System.out.println("\taasdf");
+			}
 			int btn = e.getButton();
 			switch (btn)
 			{
@@ -184,26 +188,26 @@ public class CellIcon extends JLabel implements CellListener
 			{
 				return;
 			}
-			System.out.println("Mouse entered");
+			System.out.println("Mouse entered " + cell.getPoint());
 			if (cell.isOpen() || cell.getFlagState() == 1)
 			{
 				return;
 			}
 
-			if (e.getModifiers() == MouseEvent.BUTTON1_MASK)
+			if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0)
 			{
-				System.out.println("CellIcon: enter left");
+				System.out.println("CellIcon: enter left " + cell.getPoint());
 				leftDown = true;
 				pressCellIcon();
 				validateAndRepaint();
 			}
-			if (e.getModifiers() == MouseEvent.BUTTON2_MASK)
+			if ((e.getModifiersEx() & MouseEvent.BUTTON2_DOWN_MASK) != 0)
 			{
 				System.out.println("CellIcon: enter middle");
 				pressCellIcon();
 				validateAndRepaint();
 			}
-			if (e.getModifiers() == MouseEvent.BUTTON3_MASK)
+			if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0)
 			{
 				System.out.println("CellIcon: enter right");
 				rightDown = true;
@@ -226,8 +230,8 @@ public class CellIcon extends JLabel implements CellListener
 				return;
 			}
 
-			if (!(e.getModifiers() == MouseEvent.BUTTON1_MASK)
-					|| !(e.getModifiers() == MouseEvent.BUTTON2_MASK))
+			if (!((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0)
+					|| !((e.getModifiersEx() & MouseEvent.BUTTON2_DOWN_MASK) != 0))
 			{
 				CellIcon.this.resetImageToCellState();
 				System.out.println(

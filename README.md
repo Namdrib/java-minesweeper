@@ -1,5 +1,5 @@
 # java-minesweeper
-A Java version of Microsoft XP Mineseweeper. The GUI is built using Java Swing, with the sound component using JavaFX. This may be ported to JavaFX in the future.
+A Java version of Microsoft XP Mineseweeper. The GUI is built using Java AWT and Swing, with the sound component using JavaFX. This may be ported to JavaFX in the future.
 
 ## Requirements
 - Java 8 or higher
@@ -24,7 +24,7 @@ A Java version of Microsoft XP Mineseweeper. The GUI is built using Java Swing, 
 - Right-clicking on a tile flags it - this is useful for marking the position of known mines
 	- If enabled, right-clicking again on a flagged mine puts `?`, which may be useful for if the player is unsure whether there is a mine
 - Left-and-right clicking at the same time on a numbered tile allows the user to perform a **chording** action
-	- Chording only takes place if there are the same number of flags around the tile as its displayed number. For example, to chord a "1" tile, there must be exaectly 1 flag around it
+	- Chording only takes place if there are the same number of flags around the tile as its displayed number. For example, to chord a "1" tile, there must be exactly 1 flag around it
 	- Chording opens every un-flagged neighbour of the target tile, which allows for rapid board expansion
 	- If one of the flags around the neighbour is incorrectly placed, this results in the opening of a mine, resulting in the game being lost
 	- The user may also middle-click the tile to achieve the same effect
