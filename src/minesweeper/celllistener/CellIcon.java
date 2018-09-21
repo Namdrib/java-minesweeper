@@ -27,19 +27,6 @@ public class CellIcon extends JLabel implements CellListener {
     }
 
     /**
-     * 
-     * @param e a MouseEvent pass in from one of the overridden methods
-     * 
-     * @return <code>true</code> if the current state of of the mouse activates chording,
-     *         <code>false</code> otherwise
-     */
-    private boolean isChording(MouseEvent e) {
-      boolean chording = false;
-      chording |= (true);
-      return chording;
-    }
-
-    /**
      * A chord action is to open all non-mine squares around a CellIcon's Cell. The opening action
      * should be indirect
      */

@@ -5,10 +5,10 @@ import java.util.List;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import minesweeper.util.Global;
-import javafx.embed.swing.JFXPanel;
 
 public class TestAudio {
   // Takes an absolute path

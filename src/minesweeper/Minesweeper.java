@@ -24,8 +24,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javafx.embed.swing.JFXPanel;
 import minesweeper.game.Game;
-import minesweeper.game.GameImpl;
 import minesweeper.game.Game.GameDifficulty;
+import minesweeper.game.GameImpl;
 import minesweeper.gamelistener.GamePanel;
 import minesweeper.util.Global;
 
