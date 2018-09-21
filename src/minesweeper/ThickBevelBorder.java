@@ -25,6 +25,10 @@ import javax.swing.border.AbstractBorder;
  *
  */
 public class ThickBevelBorder extends AbstractBorder {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -3493466319037347914L;
   Color topLeftColour, bottomRightColour, diagColour;
   int borderThickness;
 
