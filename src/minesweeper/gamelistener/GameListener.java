@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.gamelistener;
 
 public interface GameListener {
   public void gameLose();

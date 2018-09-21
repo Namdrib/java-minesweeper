@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.celllistener;
 
 /**
  * A listener for changes to a place. Informed with the <code>cellChanged()</code> function. This

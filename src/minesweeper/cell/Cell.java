@@ -1,6 +1,8 @@
-package minesweeper;
+package minesweeper.cell;
 
 import java.awt.Point;
+import minesweeper.celllistener.CellListener;
+import minesweeper.game.Game;
 
 /**
  * 

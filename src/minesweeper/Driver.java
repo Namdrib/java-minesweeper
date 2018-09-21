@@ -1,5 +1,8 @@
 package minesweeper;
 
+import minesweeper.game.Game;
+import minesweeper.game.GameImpl;
+
 public class Driver {
 
   public static void main(String[] args) {

@@ -1,10 +1,12 @@
-package minesweeper;
+package minesweeper.celllistener;
 
 import java.awt.event.MouseEvent;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
+import minesweeper.cell.Cell;
+import minesweeper.util.Global;
 
 public class CellIcon extends JLabel implements CellListener {
   /**

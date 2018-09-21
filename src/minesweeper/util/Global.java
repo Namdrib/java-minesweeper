@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.util;
 
 /**
  * Used to store constants such as file/directory paths

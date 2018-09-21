@@ -23,7 +23,11 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javafx.embed.swing.JFXPanel;
-import minesweeper.Game.GameDifficulty;
+import minesweeper.game.Game;
+import minesweeper.game.GameImpl;
+import minesweeper.game.Game.GameDifficulty;
+import minesweeper.gamelistener.GamePanel;
+import minesweeper.util.Global;
 
 /**
  * 
@@ -80,9 +84,9 @@ public class Minesweeper {
   Timer timer;
   Ticker ticker;
 
-  boolean enableMarking;
-  boolean enableColour;
-  boolean enableSound;
+  public boolean enableMarking;
+  public boolean enableColour;
+  public boolean enableSound;
 
   // Best time stuff
   int defaultTime = 999;

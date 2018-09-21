@@ -1,8 +1,10 @@
-package minesweeper;
+package minesweeper.game;
 
 import java.awt.Point;
 import java.util.List;
 import java.util.Set;
+import minesweeper.cell.Cell;
+import minesweeper.gamelistener.GameListener;
 
 /**
  * 

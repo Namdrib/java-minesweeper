@@ -7,7 +7,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import minesweeper.Global;
+import minesweeper.util.Global;
 import javafx.embed.swing.JFXPanel;
 
 public class TestAudio {

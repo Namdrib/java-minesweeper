@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.gamelistener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,7 +19,11 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.MouseInputAdapter;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import minesweeper.ThickBevelBorder;
+import minesweeper.Minesweeper;
+import minesweeper.celllistener.CellIcon;
+import minesweeper.game.Game;
+import minesweeper.util.Global;
+import minesweeper.util.ThickBevelBorder;
 
 /**
  * 
