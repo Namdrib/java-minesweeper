@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -17,7 +15,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.event.MouseInputAdapter;
 import javafx.scene.media.Media;
@@ -30,6 +27,10 @@ import minesweeper.ThickBevelBorder;
  *
  */
 public class GamePanel extends JPanel implements GameListener {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 9163587486511740720L;
   Minesweeper minesweeper;
   Game game;
   GamePanelMouseListener l;
@@ -91,42 +92,84 @@ public class GamePanel extends JPanel implements GameListener {
     }
     numMinePanel.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 1));
 
-    // add face (CENTER) TODO : turn into JLabel?
-    // JButton face = new JButton(".",
-    // new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
-    // face.setMnemonic(MouseEvent.BUTTON1);
-    // face.addActionListener(new ActionListener() {
-    // public void actionPerformed(ActionEvent e)
-    // {
-    // System.out.println("Face pressed!");
-    // minesweeper.resetGame();
-    // }
-    // });
-    // face.addMouseListener(new MouseListener() {
-    //
-    // @Override
-    // public void mouseClicked(MouseEvent arg0)
-    // {
-    // // TODO Auto-generated method stub
-    // ;
-    // }
-    //
-    // @Override
-    // public void mousePressed(MouseEvent arg0)
-    // {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // @Override
-    // public void mouseReleased(MouseEvent arg0)
-    // {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    // });
+    // add face (CENTER)
+    ImageIcon faceIcon = new ImageIcon(Global.IMAGE_PATH + "face-normal.png");
+    face = new JLabel(faceIcon);
+    face.addMouseListener(new MouseListener() {
+      boolean pressed = false;
+      boolean wasPressed = false;
 
-    face = new JLabel(new ImageIcon(Global.IMAGE_PATH + "face-normal.png"));
+      private void pressFaceIcon() {
+        face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-pressed.png"));
+      }
+
+      /**
+       * Set the face icon depending on the current game state
+       * <ul>
+       * <li>Lose: face-lose
+       * <li>Win: face-win
+       * <li>Normal: face-normal
+       * <ul>
+       */
+      private void resetImageToFaceState() {
+        String iconPath = Global.IMAGE_PATH;
+        switch (game.getFinished()) {
+          case 0:
+            iconPath += "face-normal.png";
+            break;
+
+          case 1:
+            iconPath += "face-win.png";
+            break;
+
+          case 2:
+            iconPath += "face-lose.png";
+            break;
+
+          default:
+            iconPath += "face-normal.png";
+            break;
+        }
+        face.setIcon(new ImageIcon(iconPath));
+      }
+
+      @Override
+      public void mouseClicked(MouseEvent me) {}
+
+      @Override
+      public void mousePressed(MouseEvent me) {
+        if (me.getButton() == MouseEvent.BUTTON1) {
+          pressed = true;
+          wasPressed = true;
+          pressFaceIcon();
+        }
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent me) {
+        if (pressed) {
+          System.out.println("Face pressed!");
+          minesweeper.resetGame();
+        }
+        pressed = false;
+        wasPressed = false;
+        resetImageToFaceState();
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent me) {
+        if (wasPressed) {
+          pressFaceIcon();
+          pressed = true;
+        }
+      }
+
+      @Override
+      public void mouseExited(MouseEvent me) {
+        pressed = false;
+        resetImageToFaceState();
+      }
+    });
 
     // add timer (LINE_END)
     timerPanel = new JPanel();
@@ -138,10 +181,13 @@ public class GamePanel extends JPanel implements GameListener {
     timerPanel.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 1));
 
     // Add everything to the HUD
-    JPanel hud = new JPanel(new BorderLayout());
-    hud.add(numMinePanel, BorderLayout.LINE_START);
-    hud.add(face, BorderLayout.CENTER);
-    hud.add(timerPanel, BorderLayout.LINE_END);
+    JPanel hud = new JPanel();
+    hud.setLayout(new BoxLayout(hud, BoxLayout.LINE_AXIS));
+    hud.add(numMinePanel);
+    hud.add(Box.createHorizontalGlue());
+    hud.add(face);
+    hud.add(Box.createHorizontalGlue());
+    hud.add(timerPanel);
     hud.setBackground(new Color(192, 192, 192));
 
     // Add a thing around the hud so there's some space
