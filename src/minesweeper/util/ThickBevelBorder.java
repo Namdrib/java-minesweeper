@@ -20,6 +20,9 @@ import javax.swing.border.AbstractBorder;
  * 
  * It also has a thickness, described by pixels.
  * 
+ * Heavily inspired by
+ * https://stackoverflow.com/questions/38967517/create-bevelborder-of-certain-width-in-java-swing
+ * 
  * @see BevelBorder
  * @author Namdrib
  *

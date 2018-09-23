@@ -189,7 +189,6 @@ public class CellImpl implements Cell {
     isOpen = true;
 
     // A mine has been opened.
-    // TODO : "safeguarding" the first click?
     // TODO : extend to make a safe "lake"
     if (isMine()) {
       System.err.println("CellImpl.open(): Landed on a mine at " + point);

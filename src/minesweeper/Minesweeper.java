@@ -150,7 +150,7 @@ public class Minesweeper {
     menuItem = createJMenuItem("New", KeyEvent.VK_N, "Start anew. Discards current map",
         KeyStroke.getKeyStroke("F2"));
     menuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         resetGame();
       }
     });
@@ -164,7 +164,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_B);
     rbMenuItem.setSelected(true);
     rbMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("Beginner difficulty");
         difficulty = GameDifficulty.BEGINNER;
         resetGame();
@@ -177,7 +177,7 @@ public class Minesweeper {
     rbMenuItem = new JRadioButtonMenuItem("Intermediate");
     rbMenuItem.setMnemonic(KeyEvent.VK_I);
     rbMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("Intermediate difficulty");
         difficulty = GameDifficulty.INTERMEDIATE;
         resetGame();
@@ -190,7 +190,7 @@ public class Minesweeper {
     rbMenuItem = new JRadioButtonMenuItem("Expert");
     rbMenuItem.setMnemonic(KeyEvent.VK_E);
     rbMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("Expert difficulty");
         difficulty = GameDifficulty.EXPERT;
         resetGame();
@@ -203,7 +203,7 @@ public class Minesweeper {
     rbMenuItem = new JRadioButtonMenuItem("Custom...");
     rbMenuItem.setMnemonic(KeyEvent.VK_C);
     rbMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("Custom difficulty");
 
         // User dialogue for: "Height", "Width" and "Mines"
@@ -246,7 +246,7 @@ public class Minesweeper {
     markingMenuItem = new JCheckBoxMenuItem("Marks (?)");
     markingMenuItem.setMnemonic(KeyEvent.VK_M);
     markingMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         game.getCells().stream()
             .forEach(r -> r.stream().forEach(c -> c.setMarking(markingMenuItem.isSelected())));
         System.out.println("Toggle marks: " + enableMarking);
@@ -259,7 +259,7 @@ public class Minesweeper {
     colourMenuItem = new JCheckBoxMenuItem("Colour");
     colourMenuItem.setMnemonic(KeyEvent.VK_L);
     colourMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         // TODO : colour
         enableColour = colourMenuItem.isSelected();
         System.out.println("Toggle colour: " + enableColour);
@@ -272,7 +272,7 @@ public class Minesweeper {
     soundMenuItem = new JCheckBoxMenuItem("Sound");
     soundMenuItem.setMnemonic(KeyEvent.VK_S);
     soundMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         enableSound = soundMenuItem.isSelected();
         System.out.println("Toggle sound: " + enableSound);
       }
@@ -285,7 +285,7 @@ public class Minesweeper {
     // File -> Best Times... : Shows best times
     menuItem = createJMenuItem("Best Times...", KeyEvent.VK_T, "Shows best times");
     menuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         showBestTimes();
       }
     });
@@ -296,7 +296,7 @@ public class Minesweeper {
     // File -> Exit : Close the window
     menuItem = createJMenuItem("Exit", KeyEvent.VK_X, "Close the window");
     menuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("Exit");
         System.exit(0);
       }
@@ -311,7 +311,7 @@ public class Minesweeper {
     // Help -> About Minesweeper... : Show information
     menuItem = createJMenuItem("About Minesweeper...", KeyEvent.VK_A, "Show information");
     menuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent ae) {
         System.out.println("About Minesweeper...");
         showAbout();
       }
@@ -391,7 +391,7 @@ public class Minesweeper {
     resetButton.addActionListener(new ActionListener() {
       // Setting the JLabel's text repaints it
       @Override
-      public void actionPerformed(ActionEvent arg0) {
+      public void actionPerformed(ActionEvent ae) {
         resetBestTimes();
         text.setText(getBestTimesText());
       }
