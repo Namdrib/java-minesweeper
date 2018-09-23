@@ -10,4 +10,5 @@ public class Global {
   public static final String ASSET_PATH = "assets";
   public static final String IMAGE_PATH = ASSET_PATH + "/img/";
   public static final String SOUND_PATH = ASSET_PATH + "/sound/";
+  public static final String PREFFERED_FONT = "Arial";
 }

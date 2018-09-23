@@ -228,10 +228,10 @@ public class CellIcon extends JLabel implements CellListener {
 
   @Override
   public void cellChanged() {
-    System.err.print("Cell changed: ");
+    // System.err.print("Cell changed: ");
     resetImageToCellState();
 
-    System.err.println(cell.getPoint() + " to " + getIcon().toString());
+    // System.err.println(cell.getPoint() + " to " + getIcon().toString());
 
     cell.getGame().setFinished();
 

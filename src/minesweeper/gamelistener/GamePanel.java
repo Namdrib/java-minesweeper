@@ -146,7 +146,7 @@ public class GamePanel extends JPanel implements GameListener {
 
     @Override
     public void mousePressed(MouseEvent me) {
-      if (me.getButton() == MouseEvent.BUTTON1) {
+      if (me.getButton() == MouseEvent.BUTTON1 || me.getButton() == MouseEvent.BUTTON2) {
         System.out.println("GamePanel: mouse pressed");
         if (game.getFinished() > 0) {
           return;
@@ -166,10 +166,23 @@ public class GamePanel extends JPanel implements GameListener {
     public void mouseReleased(MouseEvent me) {
       System.out.println("GamePanel: mouse released");
       if (pressed) {
-        System.out.println("Face pressed!");
+        face.resetImageToFaceState();
       }
       pressed = false;
       wasPressed = false;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+      if (wasPressed) {
+        pressed = true;
+      }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+      pressed = false;
+      face.resetImageToFaceState();
     }
   }
 

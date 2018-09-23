@@ -1,6 +1,7 @@
 package minesweeper;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -370,7 +371,8 @@ public class Minesweeper {
     sb.append("<html><table>");
     for (GameDifficulty gd : GameDifficulty.values()) {
       if (gd != GameDifficulty.CUSTOM) {
-        String difficultyStr = gd.toString().substring(0, 1).toUpperCase() + gd.toString().substring(1).toLowerCase();
+        String difficultyStr =
+            gd.toString().substring(0, 1).toUpperCase() + gd.toString().substring(1).toLowerCase();
         sb.append("<tr><td>" + difficultyStr + ":</td>");
         sb.append("<td>" + bestTimes.get(gd) + " seconds</td>");
         sb.append("<td>" + bestNames.get(gd) + "</td></tr>");
@@ -386,6 +388,7 @@ public class Minesweeper {
    */
   private void showBestTimes() {
     JLabel text = new JLabel(getBestTimesText(), JLabel.CENTER);
+    text.setFont(new Font(Global.PREFFERED_FONT, Font.PLAIN, 12));
     JButton resetButton = new JButton("Reset Scores");
     resetButton.setEnabled(true);
     resetButton.addActionListener(new ActionListener() {
