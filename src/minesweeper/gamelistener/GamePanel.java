@@ -43,27 +43,133 @@ public class GamePanel extends JPanel implements GameListener {
   JLabel[] numMineLabels;
   ImageIcon[] numMineIcons;
 
-  JLabel face;
+  Face face;
 
   JPanel timerPanel;
   JLabel[] timerLabels;
   ImageIcon[] timerIcons;
 
+  private class Face extends JLabel {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5160499669072181398L;
+
+    public Face() {
+      ImageIcon faceIcon = new ImageIcon(Global.IMAGE_PATH + "face-normal.png");
+      this.setIcon(faceIcon);
+      this.addMouseListener(new MouseListener() {
+        boolean pressed = false;
+        boolean wasPressed = false;
+
+        private void pressFaceIcon() {
+          Face.this.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-pressed.png"));
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent me) {
+          ;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent me) {
+          if (me.getButton() == MouseEvent.BUTTON1) {
+            pressed = true;
+            wasPressed = true;
+            pressFaceIcon();
+          }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent me) {
+          if (pressed) {
+            System.out.println("Face pressed!");
+            minesweeper.resetGame();
+          }
+          pressed = false;
+          wasPressed = false;
+          resetImageToFaceState();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent me) {
+          if (wasPressed) {
+            pressFaceIcon();
+            pressed = true;
+          }
+        }
+
+        @Override
+        public void mouseExited(MouseEvent me) {
+          pressed = false;
+          resetImageToFaceState();
+        }
+      });
+    }
+
+    /**
+     * Set the face icon depending on the current game state
+     * <ul>
+     * <li>Lose: face-lose
+     * <li>Win: face-win
+     * <li>Normal: face-normal
+     * <ul>
+     */
+    public void resetImageToFaceState() {
+      String iconPath = Global.IMAGE_PATH;
+      switch (game.getFinished()) {
+        case 0:
+          iconPath += "face-normal.png";
+          break;
+
+        case 1:
+          iconPath += "face-win.png";
+          break;
+
+        case 2:
+          iconPath += "face-lose.png";
+          break;
+
+        default:
+          iconPath += "face-normal.png";
+          break;
+      }
+      face.setIcon(new ImageIcon(iconPath));
+    }
+  }
+
   // TODO big boi
   private class GamePanelMouseListener extends MouseInputAdapter {
+    boolean pressed = false;
+    boolean wasPressed = false;
+
     @Override
-    public void mousePressed(MouseEvent e) {
-      System.out.println("GamePanel: mouse pressed");
+    public void mousePressed(MouseEvent me) {
+      if (me.getButton() == MouseEvent.BUTTON1) {
+        System.out.println("GamePanel: mouse pressed");
+        if (game.getFinished() > 0) {
+          return;
+        }
+        pressed = true;
+        wasPressed = true;
+        face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-click.png"));
+      }
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent me) {
       System.out.println("GamePanel: mouse clicked");
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent me) {
       System.out.println("GamePanel: mouse released");
+      if (pressed) {
+        System.out.println("Face pressed!");
+      }
+      pressed = false;
+      wasPressed = false;
     }
   }
 
@@ -97,83 +203,7 @@ public class GamePanel extends JPanel implements GameListener {
     numMinePanel.setBorder(new ThickBevelBorder(Color.GRAY, Color.WHITE, 1));
 
     // add face (CENTER)
-    ImageIcon faceIcon = new ImageIcon(Global.IMAGE_PATH + "face-normal.png");
-    face = new JLabel(faceIcon);
-    face.addMouseListener(new MouseListener() {
-      boolean pressed = false;
-      boolean wasPressed = false;
-
-      private void pressFaceIcon() {
-        face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-pressed.png"));
-      }
-
-      /**
-       * Set the face icon depending on the current game state
-       * <ul>
-       * <li>Lose: face-lose
-       * <li>Win: face-win
-       * <li>Normal: face-normal
-       * <ul>
-       */
-      private void resetImageToFaceState() {
-        String iconPath = Global.IMAGE_PATH;
-        switch (game.getFinished()) {
-          case 0:
-            iconPath += "face-normal.png";
-            break;
-
-          case 1:
-            iconPath += "face-win.png";
-            break;
-
-          case 2:
-            iconPath += "face-lose.png";
-            break;
-
-          default:
-            iconPath += "face-normal.png";
-            break;
-        }
-        face.setIcon(new ImageIcon(iconPath));
-      }
-
-      @Override
-      public void mouseClicked(MouseEvent me) {}
-
-      @Override
-      public void mousePressed(MouseEvent me) {
-        if (me.getButton() == MouseEvent.BUTTON1) {
-          pressed = true;
-          wasPressed = true;
-          pressFaceIcon();
-        }
-      }
-
-      @Override
-      public void mouseReleased(MouseEvent me) {
-        if (pressed) {
-          System.out.println("Face pressed!");
-          minesweeper.resetGame();
-        }
-        pressed = false;
-        wasPressed = false;
-        resetImageToFaceState();
-      }
-
-      @Override
-      public void mouseEntered(MouseEvent me) {
-        if (wasPressed) {
-          pressFaceIcon();
-          pressed = true;
-        }
-      }
-
-      @Override
-      public void mouseExited(MouseEvent me) {
-        pressed = false;
-        resetImageToFaceState();
-      }
-    });
+    face = new Face();
 
     // add timer (LINE_END)
     timerPanel = new JPanel();
