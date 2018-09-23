@@ -367,16 +367,16 @@ public class Minesweeper {
    */
   private String getBestTimesText() {
     StringBuilder sb = new StringBuilder();
-    sb.append("<html>");
+    sb.append("<html><table>");
     for (GameDifficulty gd : GameDifficulty.values()) {
       if (gd != GameDifficulty.CUSTOM) {
-        String difficultyStr =
-            gd.toString().substring(0, 1).toUpperCase() + gd.toString().substring(1).toLowerCase();
-        sb.append(difficultyStr + ": ").append(bestTimes.get(gd))
-            .append(" seconds " + bestNames.get(gd) + "<br>");
+        String difficultyStr = gd.toString().substring(0, 1).toUpperCase() + gd.toString().substring(1).toLowerCase();
+        sb.append("<tr><td>" + difficultyStr + ":</td>");
+        sb.append("<td>" + bestTimes.get(gd) + " seconds</td>");
+        sb.append("<td>" + bestNames.get(gd) + "</td></tr>");
       }
     }
-    sb.append("</html>");
+    sb.append("</table></html>");
     return sb.toString();
   }
 
@@ -425,12 +425,11 @@ public class Minesweeper {
 
     // Create prompt for time. Just ask for name
     // TODO : Have so only 1 prompt button "OK"
-    String prompt = "You have the fastest time for the " + difficulty.toString().toLowerCase()
-        + " level.\nPlease enter your name";
+    String prompt = "You have the fastest time for " + difficulty.toString().toLowerCase()
+        + " level.\nPlease enter your name.";
     String s = (String) JOptionPane.showInputDialog(frame, prompt, null, JOptionPane.PLAIN_MESSAGE,
         null, null, bestNames.get(difficulty));
     if (s != null) {
-      System.out.println("Recv'd name is " + s);
       bestNames.put(difficulty, s);
     }
     bestTimes.put(difficulty, time);
