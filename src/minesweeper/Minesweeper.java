@@ -1,7 +1,6 @@
 package minesweeper;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +22,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javafx.embed.swing.JFXPanel;
 import minesweeper.game.Game;
 import minesweeper.game.Game.GameDifficulty;
@@ -388,7 +389,6 @@ public class Minesweeper {
    */
   private void showBestTimes() {
     JLabel text = new JLabel(getBestTimesText(), JLabel.CENTER);
-    text.setFont(new Font(Global.PREFFERED_FONT, Font.PLAIN, 12));
     JButton resetButton = new JButton("Reset Scores");
     resetButton.setEnabled(true);
     resetButton.addActionListener(new ActionListener() {
@@ -451,6 +451,21 @@ public class Minesweeper {
     // https://stackoverflow.com/questions/37832170/java-exception-in-thread-awt-eventqueue-0-java-lang-classcastexception#37832926
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
+
+        // Set the look and feel of the Swing UI
+        try {
+          // Set to System L&F
+          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException e) {
+          // handle exception
+        } catch (ClassNotFoundException e) {
+          // handle exception
+        } catch (InstantiationException e) {
+          // handle exception
+        } catch (IllegalAccessException e) {
+          // handle exception
+        }
+
         // this makes sounds play by initialising a thing
         // https://stackoverflow.com/questions/14025718/javafx-toolkit-not-initialized-when-trying-to-play-an-mp3-file-through-mediap
         @SuppressWarnings("unused")
