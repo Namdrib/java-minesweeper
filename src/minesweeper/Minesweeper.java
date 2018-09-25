@@ -429,7 +429,7 @@ public class Minesweeper {
     // Create prompt for time. Just ask for name
     // TODO : Have so only 1 prompt button "OK"
     String prompt = "You have the fastest time for " + difficulty.toString().toLowerCase()
-        + " level.\nPlease enter your name.";
+        + " level.\nPlease enter your name.\n\n";
     String s = (String) JOptionPane.showInputDialog(frame, prompt, null, JOptionPane.PLAIN_MESSAGE,
         null, null, bestNames.get(difficulty));
     if (s != null) {

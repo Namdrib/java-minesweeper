@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import minesweeper.cell.Cell;
 import minesweeper.cell.CellImpl;
+import minesweeper.cell.Cell.CellState;
 import minesweeper.gamelistener.GameListener;
 
 /**
@@ -182,15 +183,15 @@ public class GameImpl implements Game {
     // A mine has been opened (lose game)
     int openMines = (int) cells.stream().flatMap(Collection::stream)
         .filter(c -> c.isOpen() && c.isMine()).count();
-    if (openMines > 1) {
+    if (openMines > 0) {
       finished = 2;
       alertListeners(GameChangeType.LOSE);
       return;
     }
 
     // The board has been revealed (win game)
-    int openCells =
-        (int) cells.stream().flatMap(Collection::stream).filter(c -> c.isOpen()).count();
+    int openCells = (int) cells.stream().flatMap(Collection::stream)
+        .filter(c -> c.isOpen() && !c.isMine() && c.getCellState() != CellState.MINE3).count();
     if (openCells == (dims.getX() * dims.getY() - numMines)) {
       finished = 1;
       alertListeners(GameChangeType.WIN);
