@@ -11,6 +11,7 @@ import minesweeper.cell.Cell;
 import minesweeper.cell.CellImpl;
 import minesweeper.cell.Cell.CellState;
 import minesweeper.gamelistener.GameListener;
+import minesweeper.util.Util;
 
 /**
  * 
@@ -113,9 +114,9 @@ public class GameImpl implements Game {
   @Override
   public void createBoard(int width, int height, int numMines) {
     // Clamp the dimensions and mine numbers
-    dims = new Point(Math.max(9, Math.min(30, width)), Math.max(9, Math.min(24, height)));
+    dims = new Point(Util.clamp(width, 9, 30), Util.clamp(height, 9, 24));
     int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
-    this.numMines = Math.max(10, Math.min(maxMines, numMines));
+    this.numMines = Util.clamp(numMines, 10, maxMines);
 
     // Initialise with numMines mines in no particular order, then shuffle
     List<Cell> first = new ArrayList<>();
@@ -146,10 +147,9 @@ public class GameImpl implements Game {
   @Override
   public void createBoard(List<List<Boolean>> mines) {
     // Clamp the dimensions and mine numbers
-    dims = new Point(Math.max(9, Math.min(30, mines.get(0).size())),
-        Math.max(9, Math.min(24, mines.size())));
+    dims = new Point(Util.clamp(mines.get(0).size(), 9, 30), Util.clamp(mines.size(), 9, 24));
     int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
-    this.numMines = Math.max(10, Math.min(maxMines, numMines));
+    this.numMines = Util.clamp(numMines, 10, maxMines);
 
     // Create Cells based on mines
     cells = new ArrayList<>();

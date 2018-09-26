@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import minesweeper.cell.Cell;
@@ -11,12 +12,14 @@ import minesweeper.game.Game;
 
 public class GameReaderWriter implements GameIO {
 
+  @SuppressWarnings("null")
   @Override
   public void readMines(Reader r, Game g) throws IOException, GameFormatException {
     // TODO Auto-generated method stub
     try (BufferedReader br = new BufferedReader(r)) {
       String line;
       int x = -1, y = -1, n = -1;
+      List<List<Boolean>> mines = null;
       for (int lineNumber = 0; (line = br.readLine()) != null; lineNumber++) {
         // Ignore empty lines
         if (line.trim().isEmpty()) {
@@ -51,6 +54,16 @@ public class GameReaderWriter implements GameIO {
             throw new GameFormatException(lineNumber,
                 "GameReaderWriter.readMines(): y: not integral. Found " + coords[1]);
           }
+
+          // Initialise mines
+          mines = new ArrayList<>();
+          for (int i = 0; i < y; i++) {
+            List<Boolean> row = new ArrayList<>();
+            for (int j = 0; j < x; j++) {
+              row.add(false);
+            }
+            mines.add(row);
+          }
           continue;
         }
 
@@ -71,9 +84,29 @@ public class GameReaderWriter implements GameIO {
           continue;
         }
 
+        if (x == -1 || y == -1 || n == -1) {
+          throw new GameFormatException(lineNumber,
+              "GameReaderWriter.readMines(): Must read x, y and n before mine locations");
+        }
+
         String[] coords = line.split(" ");
         System.out.println("Got " + Arrays.toString(coords) + " on line " + lineNumber);
+        int xCoord, yCoord;
+        try {
+          xCoord = Integer.parseInt(coords[0]);
+        } catch (NumberFormatException ex) {
+          throw new GameFormatException(lineNumber,
+              "GameReaderWriter.readMines(): xi: not integral. Found " + coords[0]);
+        }
+        try {
+          yCoord = Integer.parseInt(coords[1]);
+        } catch (NumberFormatException ex) {
+          throw new GameFormatException(lineNumber,
+              "GameReaderWriter.readMines(): yi: not integral. Found " + coords[0]);
+        }
+        mines.get(yCoord).set(xCoord, true);
       }
+      g.createBoard(mines);
     }
   }
 
@@ -96,8 +129,8 @@ public class GameReaderWriter implements GameIO {
     for (List<Cell> row : cells) {
       for (Cell cell : row) {
         if (cell.isMine()) {
-          int xCoord = x - (int) cell.getPoint().getX();
-          int yCoord = y - (int) cell.getPoint().getY();
+          int xCoord = (int) cell.getPoint().getX();
+          int yCoord = (int) cell.getPoint().getY();
           w.write(xCoord + " " + yCoord);
         }
       }

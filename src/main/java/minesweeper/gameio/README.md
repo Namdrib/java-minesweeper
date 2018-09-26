@@ -22,7 +22,7 @@ The next line describes how many mines there are in the game (`n`). Again, a Gam
 ### The location of each mine
 The next n lines should be space-separated pairs of numbers (`xi yi`), each describing the x- and y-co-ordinates of a mine. If there are too few mine locations provided, or if any of them are out of bounds, or a location is duplicated, a GameFormatException should be thrown.
 
-The x- and y-co-ordinates should follow Cartesian co-ordinates. i.e. `0 0` is a mine in the bottom-left corner, and `x-1 y-1` is a mine in the top-right corner.
+The x- and y-co-ordinates should follow nested array co-ordinates. i.e. `0 0` is a mine in the top-left corner, and `x-1 y-1` is a mine in the bottom-right corner.
 
 ### Example input file
 ```
@@ -39,7 +39,7 @@ The x- and y-co-ordinates should follow Cartesian co-ordinates. i.e. `0 0` is a 
 8 8
 9 9
 ```
-This describes a game whose mines follow a straight diagonal from bottom-left to top-right.
+This describes a game whose mines follow a straight diagonal from the top-left to bottom-right.
 
 ## \*Game
 The "\*Games()" set of functions handles reading/writing a a file describing the complete game state. Like the "\*Mines()" set of functions, it must contain:
