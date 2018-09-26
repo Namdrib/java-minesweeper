@@ -5,6 +5,11 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,6 +17,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -28,6 +34,8 @@ import javafx.embed.swing.JFXPanel;
 import minesweeper.game.Game;
 import minesweeper.game.Game.GameDifficulty;
 import minesweeper.game.GameImpl;
+import minesweeper.gameio.GameIO;
+import minesweeper.gameio.GameReaderWriter;
 import minesweeper.gamelistener.GamePanel;
 import minesweeper.util.Global;
 
@@ -68,6 +76,8 @@ public class Minesweeper {
     }
   }
 
+  GameIO gio;
+
   String version = "0.5.0";
 
   // UI elements
@@ -105,7 +115,9 @@ public class Minesweeper {
    * 
    * @see Ticker
    */
-  public Minesweeper() {
+  public Minesweeper(GameIO gio) {
+    this.gio = gio;
+
     // Ticker that ticks every second
     timer = new Timer();
     ticker = new Ticker();
@@ -135,7 +147,6 @@ public class Minesweeper {
     return out;
   }
 
-  // TODO : Add File -> Open/Save As... for reading/writing the current game.
   private void addMenuThings() {
     JMenuBar menuBar;
     JMenu menu;
@@ -150,11 +161,31 @@ public class Minesweeper {
     menuBar.add(menu);
 
     // File -> New : Starts a new game
-    menuItem = createJMenuItem("New", KeyEvent.VK_N, "Start anew. Discards current map",
-        KeyStroke.getKeyStroke("F2"));
+    menuItem =
+        createJMenuItem("New", KeyEvent.VK_N, "Start a new game", KeyStroke.getKeyStroke("F2"));
     menuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
         resetGame();
+      }
+    });
+    menu.add(menuItem);
+
+    menu.addSeparator();
+    menuItem = createJMenuItem("Open...", KeyEvent.VK_O, "Open a game from file",
+        KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+    menuItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        open();
+      }
+    });
+    menu.add(menuItem);
+
+    // File -> Save as...
+    menuItem = createJMenuItem("Save as...", KeyEvent.VK_S, "Save current game to file",
+        KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+    menuItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        saveAs();
       }
     });
     menu.add(menuItem);
@@ -348,6 +379,44 @@ public class Minesweeper {
     frame.setVisible(true);
   }
 
+  // File -> Open... (Ctrl-O)
+  private void open() {
+    JFileChooser fc = new JFileChooser(Global.GAMES_PATH);
+    int ret = fc.showOpenDialog(null);
+    if (ret == JFileChooser.APPROVE_OPTION) {
+      File file = fc.getSelectedFile();
+      System.out.println("Want to read \"" + file + "\"");
+      // Do a thing with file
+      try (Reader r = new FileReader(file)) {
+        gio.readMines(r, game);
+        System.out.println("Read \"" + file + "\" successful!");
+      } catch (Exception ex) {
+        ;
+      } finally {
+        frame.validate();
+        frame.repaint();
+      }
+    }
+  }
+
+  // File -> Save As... (Ctrl-S)
+  private void saveAs() {
+    JFileChooser fc = new JFileChooser(Global.GAMES_PATH);
+    int ret = fc.showSaveDialog(null);
+    if (ret == JFileChooser.APPROVE_OPTION) {
+      File file = fc.getSelectedFile();
+      System.out.println("Want to save to \"" + file + "\"");
+      try (Writer w = new FileWriter(file)) {
+        gio.writeMines(w, game);
+      } catch (Exception ex) {
+        ;
+      } finally {
+        frame.validate();
+        frame.repaint();
+      }
+    }
+  }
+
   /**
    * Reset the the times and names of each best time
    */
@@ -472,7 +541,7 @@ public class Minesweeper {
         @SuppressWarnings("unused")
         final JFXPanel fxPanel = new JFXPanel();
         @SuppressWarnings("unused")
-        Minesweeper minesweeper = new Minesweeper();
+        Minesweeper minesweeper = new Minesweeper(new GameReaderWriter());
       }
     });
   }

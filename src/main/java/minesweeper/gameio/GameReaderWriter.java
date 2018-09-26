@@ -123,7 +123,7 @@ public class GameReaderWriter implements GameIO {
     int y = cells.size();
     w.write("# x y\n" + x + " " + y + "\n");
 
-    w.write("# n\n" + g.getNumMines());
+    w.write("# n\n" + g.getNumMines() + "\n");
 
     w.write("# mine co-ords\n");
     for (List<Cell> row : cells) {
@@ -131,7 +131,7 @@ public class GameReaderWriter implements GameIO {
         if (cell.isMine()) {
           int xCoord = (int) cell.getPoint().getX();
           int yCoord = (int) cell.getPoint().getY();
-          w.write(xCoord + " " + yCoord);
+          w.write(xCoord + " " + yCoord + "\n");
         }
       }
     }

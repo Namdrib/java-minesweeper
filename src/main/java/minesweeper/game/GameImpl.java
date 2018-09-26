@@ -140,7 +140,6 @@ public class GameImpl implements Game {
       }
       cells.add(oneRow);
     }
-
     updateCellNumbers();
   }
 
