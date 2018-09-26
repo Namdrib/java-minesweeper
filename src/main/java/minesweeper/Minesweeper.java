@@ -135,6 +135,7 @@ public class Minesweeper {
     return out;
   }
 
+  // TODO : Add File -> Open/Save As... for reading/writing the current game.
   private void addMenuThings() {
     JMenuBar menuBar;
     JMenu menu;
