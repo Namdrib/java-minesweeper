@@ -63,6 +63,15 @@ public interface Game {
   public void createBoard(int width, int height, int numMines);
 
   /**
+   * Initialise the board to contain mines where specified by mines
+   * 
+   * Used to give a predetermined board. Assume the size and number of mines in `mines` is correct
+   * 
+   * @param mines nested List of Booleans, representing the layout of mines on the board
+   */
+  public void createBoard(List<List<Boolean>> mines);
+
+  /**
    * 
    * @param cell target Cell
    * @return a Set of up to 8 Cells neighbouring the Cell specified by the input Cell

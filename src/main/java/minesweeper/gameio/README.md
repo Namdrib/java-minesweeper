@@ -26,7 +26,7 @@ The x- and y-co-ordinates should follow Cartesian co-ordinates. i.e. `0 0` is a 
 
 ### Example input file
 ```
-9 9
+10 10
 10
 0 0
 1 1

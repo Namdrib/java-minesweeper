@@ -140,7 +140,36 @@ public class GameImpl implements Game {
       cells.add(oneRow);
     }
 
-    // Update each Cell's number according to their neighbouring mines
+    updateCellNumbers();
+  }
+
+  @Override
+  public void createBoard(List<List<Boolean>> mines) {
+    // Clamp the dimensions and mine numbers
+    dims = new Point(Math.max(9, Math.min(30, mines.get(0).size())),
+        Math.max(9, Math.min(24, mines.size())));
+    int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
+    this.numMines = Math.max(10, Math.min(maxMines, numMines));
+
+    // Create Cells based on mines
+    cells = new ArrayList<>();
+    for (int i = 0; i < dims.getY(); i++) {
+      ArrayList<Cell> oneRow = new ArrayList<>();
+      for (int j = 0; j < dims.getX(); j++) {
+        oneRow.add(new CellImpl(this, new Point(j, i), mines.get(i).get(j)));
+      }
+      cells.add(oneRow);
+    }
+
+    updateCellNumbers();
+  }
+
+  /**
+   * Update every cell's number according to their neighbouring mines
+   * 
+   * e.g. if a given cell has two mines around it, its number is two
+   */
+  void updateCellNumbers() {
     cells.stream().forEach(row -> row.stream().filter(cell -> !cell.isMine()).forEach(cell -> {
       int numNeighbouringMines =
           (int) getNeighboursOf(cell).stream().filter(neighbour -> neighbour.isMine()).count();
