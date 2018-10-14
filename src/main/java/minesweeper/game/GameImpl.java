@@ -3,10 +3,10 @@ package minesweeper.game;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import minesweeper.cell.Cell;
 import minesweeper.cell.CellImpl;
 import minesweeper.cell.Cell.CellState;
@@ -106,11 +106,10 @@ public class GameImpl implements Game {
 
   // I want to distribute numMines across the board randomly.
   // But then also need to make sure they have the correct co-ordinates
-  // and neighbour numbers. Therefore, split this into a four-stage process:
-  // 1. Create a 1D List and make the first numMines entries with mines
-  // 2. Shuffle this List to randomise mine position
-  // 3. Migrate the elements into a 2D List
-  // 4. Assign numbers for each element in the 2D List based on neighbours
+  // and neighbour numbers. Therefore, split this into a three-stage process:
+  // 1. Create a blank 2D List of Cells
+  // 2. Randomly assign mines to <code>numMines</code> of these Cells
+  // 3. Assign numbers for each element in the 2D List based on neighbours
   @Override
   public void createBoard(int width, int height, int numMines) {
     // Clamp the dimensions and mine numbers
@@ -118,28 +117,29 @@ public class GameImpl implements Game {
     int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
     this.numMines = Util.clamp(numMines, 10, maxMines);
 
-    // Initialise with numMines mines in no particular order, then shuffle
-    List<Cell> first = new ArrayList<>();
-    int counter = 0;
-    for (int i = 0; i < dims.getY(); i++) {
-      for (int j = 0; j < dims.getX(); j++) {
-        first.add(new CellImpl(this, new Point(i, j), counter < this.numMines));
-        counter++;
-      }
-    }
-    Collections.shuffle(first);
-
-    // Convert the 1D List into a 2D List and re-allocate Points
+    // Step 1
     cells = new ArrayList<>();
     for (int i = 0; i < dims.getY(); i++) {
-      ArrayList<Cell> oneRow = new ArrayList<>();
+      List<Cell> oneRow = new ArrayList<>();
       for (int j = 0; j < dims.getX(); j++) {
-        Cell temp = first.get((int) (i * dims.getX() + j));
-        temp.setPoint(new Point(j, i));
-        oneRow.add(temp);
+        oneRow.add(new CellImpl(this, new Point(j, i), false));
       }
       cells.add(oneRow);
     }
+
+    // Step 2
+    int minesPlaced = 0;
+    while (minesPlaced < this.numMines) {
+      int randX = ThreadLocalRandom.current().nextInt((int) dims.getX());
+      int randY = ThreadLocalRandom.current().nextInt((int) dims.getY());
+
+      if (!cells.get(randY).get(randX).isMine()) {
+        cells.get(randY).get(randX).setNumber(-1);
+        minesPlaced++;
+      }
+    }
+
+    // Step 3
     updateCellNumbers();
   }
 
