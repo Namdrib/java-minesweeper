@@ -20,6 +20,8 @@ package minesweeper.persistence;
 public interface Persistence {
   /**
    * Resets all the best times to 999 seconds by "Anonymous"
+   * 
+   * Should result in saving the database
    */
   public void resetTimes();
 
@@ -36,16 +38,13 @@ public interface Persistence {
    * <li>Sound as true
    * </ul>
    * 
-   * Since resetTimes() exists, that can be called from within this function This is because
-   * resetTimes may be used multiple times without resetting the settings
-   * 
    * The times default values should have an entry for each of Game.GameDifficulty.{BEGINNER,
    * INTERMEDIATE, EXPERT}, each with time as 999 and name as "Anonymous"
    * 
    * 
    * @return true iff the database was successfully initialised, false otherwise
    */
-  public boolean initialiseDatabase();
+  public boolean initDB();
 
   /**
    * Write settings and times to their respective tables in the database file
