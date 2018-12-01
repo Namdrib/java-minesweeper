@@ -211,13 +211,15 @@ public class Minesweeper {
     // File -> Beginner : Starts a new beginner game
     rbMenuItem = new JRadioButtonMenuItem("Beginner");
     rbMenuItem.setMnemonic(KeyEvent.VK_B);
-    rbMenuItem.setSelected(true);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
         persistence.setLastDifficulty(GameDifficulty.BEGINNER, 9, 9, 10);
         resetGame();
       }
     });
+    if (persistence.getLastDifficulty() == GameDifficulty.BEGINNER) {
+      rbMenuItem.setSelected(true);
+    }
     difficultyRadioGroup.add(rbMenuItem);
     menu.add(rbMenuItem);
 
@@ -230,6 +232,9 @@ public class Minesweeper {
         resetGame();
       }
     });
+    if (persistence.getLastDifficulty() == GameDifficulty.INTERMEDIATE) {
+      rbMenuItem.setSelected(true);
+    }
     difficultyRadioGroup.add(rbMenuItem);
     menu.add(rbMenuItem);
 
@@ -242,6 +247,9 @@ public class Minesweeper {
         resetGame();
       }
     });
+    if (persistence.getLastDifficulty() == GameDifficulty.EXPERT) {
+      rbMenuItem.setSelected(true);
+    }
     difficultyRadioGroup.add(rbMenuItem);
     menu.add(rbMenuItem);
 
@@ -278,6 +286,9 @@ public class Minesweeper {
         }
       }
     });
+    if (persistence.getLastDifficulty() == GameDifficulty.CUSTOM) {
+      rbMenuItem.setSelected(true);
+    }
     difficultyRadioGroup.add(rbMenuItem);
     menu.add(rbMenuItem);
 
