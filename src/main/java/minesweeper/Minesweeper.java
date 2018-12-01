@@ -114,7 +114,7 @@ public class Minesweeper {
   public Minesweeper(GameIO gio) {
 
     // Set up persistence stuff
-    String path = "a.sqlite";
+    String path = "a.sqlite3";
     dbPath = "jdbc:sqlite:" + path;
 
     persistence = new SqlitePersistence(dbPath);
