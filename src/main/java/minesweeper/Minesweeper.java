@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ButtonGroup;
@@ -37,6 +37,8 @@ import minesweeper.game.GameImpl;
 import minesweeper.gameio.GameIO;
 import minesweeper.gameio.GameReaderWriter;
 import minesweeper.gamelistener.GamePanel;
+import minesweeper.persistence.Persistence;
+import minesweeper.persistence.SqlitePersistence;
 import minesweeper.util.Global;
 
 /**
@@ -89,22 +91,14 @@ public class Minesweeper {
   // Game stuff
   Game game;
   GamePanel gamePanel;
-  GameDifficulty difficulty; // base on menus
-  int width, height, numMines;
 
   // Timing stuff
   Timer timer;
   Ticker ticker;
 
-  public boolean enableMarking;
-  public boolean enableColour;
-  public boolean enableSound;
-
-  // Best time stuff
-  int defaultTime = 999;
-  String defaultName = "Anonymous";
-  HashMap<GameDifficulty, Integer> bestTimes;
-  HashMap<GameDifficulty, String> bestNames;
+  // Persistence stuff
+  public Persistence persistence;
+  String dbPath;
 
   /**
    * 
@@ -116,6 +110,29 @@ public class Minesweeper {
    * @see Ticker
    */
   public Minesweeper(GameIO gio) {
+
+    // Set up persistence stuff
+    String path = "a.sqlite";
+    dbPath = "jdbc:sqlite:" + path;
+
+    persistence = new SqlitePersistence(dbPath);
+
+    // Initialise the db if the db file doesn't exist
+    // create and set default values
+    File f = new File(path);
+    if (!f.isFile()) {
+      persistence.initDB();
+      System.out.println("Init db to " + persistence);
+    }
+
+    if (!persistence.loadDB()) {
+      System.out.println("Couldn't load db. Loading default values.");
+      persistence.resetTimes();
+      persistence.saveDB();
+    }
+
+    System.out.println("Finished loading: " + persistence);
+
     this.gio = gio;
 
     // Ticker that ticks every second
@@ -127,9 +144,7 @@ public class Minesweeper {
     frame.setLocationRelativeTo(null); // Centre the window
     frame.setIconImage(new ImageIcon(Global.IMAGE_PATH + "logo-full-small.png").getImage());
     addMenuThings();
-    resetBestTimes();
 
-    difficulty = GameDifficulty.BEGINNER;
     resetGame();
     resetGame(); // quick fix for the UI resizing. force resize (shrink) upon start.
     timer.scheduleAtFixedRate(ticker, 0, 1000);
@@ -199,8 +214,7 @@ public class Minesweeper {
     rbMenuItem.setSelected(true);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        System.out.println("Beginner difficulty");
-        difficulty = GameDifficulty.BEGINNER;
+        persistence.setLastDifficulty(GameDifficulty.BEGINNER, 9, 9, 10);
         resetGame();
       }
     });
@@ -212,8 +226,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_I);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        System.out.println("Intermediate difficulty");
-        difficulty = GameDifficulty.INTERMEDIATE;
+        persistence.setLastDifficulty(GameDifficulty.INTERMEDIATE, 16, 16, 40);
         resetGame();
       }
     });
@@ -225,8 +238,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_E);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        System.out.println("Expert difficulty");
-        difficulty = GameDifficulty.EXPERT;
+        persistence.setLastDifficulty(GameDifficulty.EXPERT, 30, 16, 99);
         resetGame();
       }
     });
@@ -238,8 +250,6 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_C);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        System.out.println("Custom difficulty");
-
         // User dialogue for: "Height", "Width" and "Mines"
         // Existing values
         Point p = game.getDimensions();
@@ -263,10 +273,7 @@ public class Minesweeper {
             return;
           }
 
-          difficulty = GameDifficulty.CUSTOM;
-          height = newHeight;
-          width = newWidth;
-          numMines = newMines;
+          persistence.setLastDifficulty(GameDifficulty.CUSTOM, newHeight, newWidth, newMines);
           resetGame();
         }
       }
@@ -283,10 +290,10 @@ public class Minesweeper {
       public void actionPerformed(ActionEvent ae) {
         game.getCells().stream()
             .forEach(r -> r.stream().forEach(c -> c.setMarking(markingMenuItem.isSelected())));
-        System.out.println("Toggle marks: " + enableMarking);
+        persistence.setMarks(markingMenuItem.isSelected());
       }
     });
-    markingMenuItem.setSelected(true);
+    markingMenuItem.setSelected(persistence.getMarks());
     menu.add(markingMenuItem);
 
     // File -> Colour : Toggle colour
@@ -295,11 +302,10 @@ public class Minesweeper {
     colourMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
         // TODO : colour
-        enableColour = colourMenuItem.isSelected();
-        System.out.println("Toggle colour: " + enableColour);
+        persistence.setColour(colourMenuItem.isSelected());
       }
     });
-    colourMenuItem.setSelected(true);
+    colourMenuItem.setSelected(persistence.getColour());
     menu.add(colourMenuItem);
 
     // File -> Sound : Toggle sound
@@ -307,11 +313,10 @@ public class Minesweeper {
     soundMenuItem.setMnemonic(KeyEvent.VK_S);
     soundMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        enableSound = soundMenuItem.isSelected();
-        System.out.println("Toggle sound: " + enableSound);
+        persistence.setSound(soundMenuItem.isSelected());
       }
     });
-    soundMenuItem.setSelected(false);
+    soundMenuItem.setSelected(persistence.getColour());
     menu.add(soundMenuItem);
 
     menu.addSeparator();
@@ -368,7 +373,8 @@ public class Minesweeper {
       System.out.println("Can't remove gamePanel");
     }
 
-    game = new GameImpl(difficulty, width, height, numMines);
+    game = new GameImpl(persistence.getLastDifficulty(), persistence.getLastX(),
+        persistence.getLastY(), persistence.getLastMines());
     gamePanel = new GamePanel(game, this);
     game.addListener(gamePanel);
 
@@ -418,26 +424,15 @@ public class Minesweeper {
   }
 
   /**
-   * Reset the the times and names of each best time
-   */
-  private void resetBestTimes() {
-    bestTimes = new HashMap<>();
-    bestNames = new HashMap<>();
-    for (GameDifficulty gd : GameDifficulty.values()) {
-      if (gd != GameDifficulty.CUSTOM) {
-        bestTimes.put(gd, defaultTime);
-        bestNames.put(gd, defaultName);
-      }
-    }
-  }
-
-  /**
    * The text is to be used in a JLabel's text field, so to display new lines, requires use of HTML
    * tags with <code><br></code> to emulate new lines.
    * 
    * @return a HTML string representing the best scores as above.
    */
   private String getBestTimesText() {
+    Map<GameDifficulty, Integer> bestTimes = persistence.getBestTimes();
+    Map<GameDifficulty, String> bestNames = persistence.getBestNames();
+
     StringBuilder sb = new StringBuilder();
     sb.append("<html><table>");
     for (GameDifficulty gd : GameDifficulty.values()) {
@@ -465,7 +460,7 @@ public class Minesweeper {
       // Setting the JLabel's text repaints it
       @Override
       public void actionPerformed(ActionEvent ae) {
-        resetBestTimes();
+        persistence.resetTimes();
         text.setText(getBestTimesText());
       }
     });
@@ -491,7 +486,7 @@ public class Minesweeper {
 
     GameDifficulty difficulty = game.getDifficulty();
     int time = game.getSecondsPassed();
-    if (difficulty == GameDifficulty.CUSTOM || time >= bestTimes.get(difficulty)) {
+    if (difficulty == GameDifficulty.CUSTOM || time >= persistence.getBestTimes().get(difficulty)) {
       System.out.println("CheckBestTime: diff or time");
       return;
     }
@@ -501,11 +496,10 @@ public class Minesweeper {
     String prompt = "You have the fastest time for " + difficulty.toString().toLowerCase()
         + " level.\nPlease enter your name.\n\n";
     String s = (String) JOptionPane.showInputDialog(frame, prompt, null, JOptionPane.PLAIN_MESSAGE,
-        null, null, bestNames.get(difficulty));
+        null, null, persistence.getBestNames().get(difficulty));
     if (s != null) {
-      bestNames.put(difficulty, s);
+      persistence.setBestTime(difficulty, time, s);
     }
-    bestTimes.put(difficulty, time);
     showBestTimes();
   }
 
@@ -516,7 +510,9 @@ public class Minesweeper {
     JOptionPane.showMessageDialog(null, out, "About Minesweeper", JOptionPane.INFORMATION_MESSAGE);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws ClassNotFoundException {
+    Class.forName("org.sqlite.JDBC");
+
     // This wrapper prevents an exception from unknown source
     // https://stackoverflow.com/questions/37832170/java-exception-in-thread-awt-eventqueue-0-java-lang-classcastexception#37832926
     SwingUtilities.invokeLater(new Runnable() {

@@ -284,7 +284,7 @@ public class GamePanel extends JPanel implements GameListener {
 
   @Override
   public void gameLose() {
-    if (minesweeper.enableSound) {
+    if (minesweeper.persistence.getSound()) {
       playSound(Global.SOUND_PATH + "lose.mp3");
     }
     face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-lose.png"));
@@ -292,7 +292,7 @@ public class GamePanel extends JPanel implements GameListener {
 
   @Override
   public void gameWin() {
-    if (minesweeper.enableSound) {
+    if (minesweeper.persistence.getSound()) {
       playSound(Global.SOUND_PATH + "win.mp3");
     }
     face.setIcon(new ImageIcon(Global.IMAGE_PATH + "face-win.png"));
@@ -307,7 +307,7 @@ public class GamePanel extends JPanel implements GameListener {
   @Override
   public void gameTick() {
     String s = String.format("%03d", game.getSecondsPassed());
-    if (minesweeper.enableSound) {
+    if (minesweeper.persistence.getSound()) {
       playSound(Global.SOUND_PATH + "tick.mp3");
     }
     for (int i = 0; i < s.length(); i++) {

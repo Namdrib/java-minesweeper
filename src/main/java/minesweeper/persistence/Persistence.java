@@ -1,5 +1,8 @@
 package minesweeper.persistence;
 
+import java.util.Map;
+import minesweeper.game.Game.GameDifficulty;
+
 /**
  * An interface to provide saving and loading functionality of game settings and times
  * 
@@ -24,6 +27,8 @@ public interface Persistence {
    * Should result in saving the database
    */
   public void resetTimes();
+
+  // --- DATABASE STUFF ---
 
   /**
    * Create settings and times tables, reset them to default values
@@ -59,4 +64,49 @@ public interface Persistence {
    * @return true iff the database was successfully read, false otherwise
    */
   public boolean loadDB();
+
+
+  // --- GETTERS & SETTERS ---
+  /**
+   * 
+   * @param lastDifficulty
+   * @param x
+   * @param y
+   * @param mines
+   */
+  public void setLastDifficulty(GameDifficulty lastDifficulty, int x, int y, int mines);
+
+  public GameDifficulty getLastDifficulty();
+
+  public int getLastX();
+
+  public int getLastY();
+
+  public int getLastMines();
+
+  public void setMarks(boolean marks);
+
+  public boolean getMarks();
+
+  public void setColour(boolean colour);
+
+  public boolean getColour();
+
+  public void setSound(boolean sound);
+
+  public boolean getSound();
+
+  /**
+   * Set the time and name as best time for a given difficulty
+   * 
+   * @param difficulty the difficulty at which the best time was achieved
+   * @param time the time in seconds it took to finish the game
+   * @param name the name/associated label with the best time
+   */
+  public void setBestTime(GameDifficulty difficulty, int time, String name);
+
+  public Map<GameDifficulty, Integer> getBestTimes();
+
+  public Map<GameDifficulty, String> getBestNames();
+
 }
