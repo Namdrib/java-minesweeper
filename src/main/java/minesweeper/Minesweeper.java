@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -140,10 +142,19 @@ public class Minesweeper {
     ticker = new Ticker();
 
     frame = new JFrame("Minesweeper");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.setLocationRelativeTo(null); // Centre the window
     frame.setIconImage(new ImageIcon(Global.IMAGE_PATH + "logo-full-small.png").getImage());
     addMenuThings();
+
+    // Save to db before exiting program
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent we) {
+        System.out.println("Saving db!");
+        persistence.saveDB();
+      }
+    });
 
     resetGame();
     resetGame(); // quick fix for the UI resizing. force resize (shrink) upon start.
@@ -347,8 +358,8 @@ public class Minesweeper {
     menuItem = createJMenuItem("Exit", KeyEvent.VK_X, "Close the window");
     menuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        System.out.println("Exit");
-        System.exit(0);
+        // By sending a closing event, makes sure db is saved
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
       }
     });
     menu.add(menuItem);

@@ -99,8 +99,6 @@ public class SqlitePersistence implements Persistence {
       stmt.executeUpdate("DROP TABLE IF EXISTS TIMES");
       stmt.executeUpdate("CREATE TABLE TIMES (DIFFICULTY TEXT, TIME INTEGER, NAME TEXT)");
 
-      stmt.close();
-
     } catch (SQLException e) {
       e.printStackTrace();
       return false;
@@ -156,8 +154,6 @@ public class SqlitePersistence implements Persistence {
         pstmt.executeUpdate();
       }
 
-      pstmt.close();
-
     } catch (SQLException ex) {
       ex.printStackTrace();
       return false;
@@ -185,8 +181,6 @@ public class SqlitePersistence implements Persistence {
         sound = rs.getBoolean(7);
       }
 
-      rs.close();
-      
       // Read times
       rs = stmt.executeQuery("SELECT DIFFICULTY, TIME, NAME FROM TIMES");
 
@@ -195,9 +189,6 @@ public class SqlitePersistence implements Persistence {
         bestTimes.put(difficulty, rs.getInt(2));
         bestNames.put(difficulty, rs.getString(3));
       }
-
-      rs.close();
-      stmt.close();
 
     } catch (SQLException ex) {
       ex.printStackTrace();
@@ -215,7 +206,6 @@ public class SqlitePersistence implements Persistence {
     this.x = x;
     this.y = y;
     this.mines = mines;
-    saveDB();
   }
 
   @Override
@@ -241,7 +231,6 @@ public class SqlitePersistence implements Persistence {
   @Override
   public void setMarks(boolean marks) {
     this.marks = marks;
-    saveDB();
   }
 
   @Override
@@ -252,7 +241,6 @@ public class SqlitePersistence implements Persistence {
   @Override
   public void setColour(boolean colour) {
     this.colour = colour;
-    saveDB();
   }
 
   @Override
@@ -263,7 +251,6 @@ public class SqlitePersistence implements Persistence {
   @Override
   public void setSound(boolean sound) {
     this.sound = sound;
-    saveDB();
   }
 
   @Override
@@ -276,7 +263,6 @@ public class SqlitePersistence implements Persistence {
     if (time < bestTimes.get(difficulty)) {
       bestTimes.put(difficulty, time);
       bestNames.put(difficulty, name);
-      saveDB();
     }
   }
 
