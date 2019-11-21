@@ -286,13 +286,21 @@ public class Minesweeper {
         if (result == JOptionPane.OK_OPTION) {
           try {
             newHeight = Integer.parseInt(heightField.getText());
+          } catch (NumberFormatException ex) {
+            newHeight = 9;
+          }
+          try {
             newWidth = Integer.parseInt(widthField.getText());
+          } catch (NumberFormatException ex) {
+            newWidth = 9;
+          }
+          try {
             newMines = Integer.parseInt(minesField.getText());
           } catch (NumberFormatException ex) {
-            return;
+            newMines = 10;
           }
 
-          persistence.setLastDifficulty(GameDifficulty.CUSTOM, newHeight, newWidth, newMines);
+          persistence.setLastDifficulty(GameDifficulty.CUSTOM, newWidth, newHeight, newMines);
           resetGame();
         }
       }
