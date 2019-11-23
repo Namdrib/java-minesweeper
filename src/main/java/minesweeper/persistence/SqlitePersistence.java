@@ -1,5 +1,6 @@
 package minesweeper.persistence;
 
+import static minesweeper.util.MinesweeperConstants.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,7 +29,7 @@ public class SqlitePersistence implements Persistence {
   Map<GameDifficulty, String> bestNames;
 
   // Some constants
-  final static int defaultTime = 999;
+  final static int defaultTime = MAX_SECONDS;
   final static String defaultName = "Anonymous";
   final static String settingsTable = "SETTINGS";
   final static String timesTable = "TIMES";
@@ -52,8 +53,9 @@ public class SqlitePersistence implements Persistence {
 
     // Set as though last were beginner
     lastDifficulty = GameDifficulty.BEGINNER;
-    x = y = 9;
-    mines = 10;
+    x = BEGINNER_X;
+    y = BEGINNER_Y;
+    mines = BEGINNER_MINES;
 
     bestTimes = new HashMap<>();
     bestNames = new HashMap<>();

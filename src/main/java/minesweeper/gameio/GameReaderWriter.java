@@ -1,5 +1,6 @@
 package minesweeper.gameio;
 
+import static minesweeper.util.MinesweeperConstants.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -36,9 +37,10 @@ public class GameReaderWriter implements GameIO {
           String[] coords = line.split(" ");
           try {
             x = Integer.parseInt(coords[0]);
-            if (x < 9 || x > 30) {
+            if (x < MIN_DIM_X || x > MAX_DIM_X) {
               throw new GameFormatException(lineNumber,
-                  "GameReaderWriter.readMines(): x: not in bounds [9, 30]. Found " + x);
+                  "GameReaderWriter.readMines(): x: not in bounds [" + MIN_DIM_X + ", " + MAX_DIM_X
+                      + "]. Found " + x);
             }
           } catch (NumberFormatException ex) {
             throw new GameFormatException(lineNumber,
@@ -46,9 +48,10 @@ public class GameReaderWriter implements GameIO {
           }
           try {
             y = Integer.parseInt(coords[1]);
-            if (y < 9 || y > 24) {
+            if (y < MIN_DIM_Y || y > MAX_DIM_Y) {
               throw new GameFormatException(lineNumber,
-                  "GameReaderWriter.readMines(): y: not in bounds [9, 24]. Found " + y);
+                  "GameReaderWriter.readMines(): y: not in bounds [" + MIN_DIM_Y + ", " + MAX_DIM_Y
+                      + "]. Found " + y);
             }
           } catch (NumberFormatException ex) {
             throw new GameFormatException(lineNumber,
@@ -71,10 +74,10 @@ public class GameReaderWriter implements GameIO {
         if (n == -1) {
           try {
             n = Integer.parseInt(line);
-            if (n < 10 || n > (x - 1) * (y - 1)) {
+            if (n < MIN_MINES || n > (x - 1) * (y - 1)) {
               throw new GameFormatException(lineNumber,
-                  "GameReaderWriter.readMines(): n: not in bounds [10, " + (x - 1) * (y - 1)
-                      + "]. Found " + n);
+                  "GameReaderWriter.readMines(): n: not in bounds [" + MIN_DIM_Y + ", "
+                      + (x - 1) * (y - 1) + "]. Found " + n);
 
             }
           } catch (NumberFormatException ex) {

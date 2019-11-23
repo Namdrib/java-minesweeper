@@ -1,5 +1,6 @@
 package minesweeper;
 
+import static minesweeper.util.MinesweeperConstants.*;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -224,7 +225,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_B);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        persistence.setLastDifficulty(GameDifficulty.BEGINNER, 9, 9, 10);
+        persistence.setLastDifficulty(GameDifficulty.BEGINNER, BEGINNER_X, BEGINNER_Y, BEGINNER_MINES);
         resetGame();
       }
     });
@@ -239,7 +240,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_I);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        persistence.setLastDifficulty(GameDifficulty.INTERMEDIATE, 16, 16, 40);
+        persistence.setLastDifficulty(GameDifficulty.INTERMEDIATE, INTERMEDIATE_X, INTERMEDIATE_Y, INTERMEDIATE_MINES);
         resetGame();
       }
     });
@@ -254,7 +255,7 @@ public class Minesweeper {
     rbMenuItem.setMnemonic(KeyEvent.VK_E);
     rbMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        persistence.setLastDifficulty(GameDifficulty.EXPERT, 30, 16, 99);
+        persistence.setLastDifficulty(GameDifficulty.EXPERT, EXPERT_X, EXPERT_Y, EXPERT_MINES);
         resetGame();
       }
     });
@@ -287,17 +288,17 @@ public class Minesweeper {
           try {
             newHeight = Integer.parseInt(heightField.getText());
           } catch (NumberFormatException ex) {
-            newHeight = 9;
+            newHeight = BEGINNER_Y;
           }
           try {
             newWidth = Integer.parseInt(widthField.getText());
           } catch (NumberFormatException ex) {
-            newWidth = 9;
+            newWidth = BEGINNER_X;
           }
           try {
             newMines = Integer.parseInt(minesField.getText());
           } catch (NumberFormatException ex) {
-            newMines = 10;
+            newMines = BEGINNER_MINES;
           }
 
           persistence.setLastDifficulty(GameDifficulty.CUSTOM, newWidth, newHeight, newMines);

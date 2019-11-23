@@ -1,5 +1,6 @@
 package minesweeper.game;
 
+import static minesweeper.util.MinesweeperConstants.*;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import minesweeper.cell.Cell;
-import minesweeper.cell.CellImpl;
 import minesweeper.cell.Cell.CellState;
+import minesweeper.cell.CellImpl;
 import minesweeper.gamelistener.GameListener;
 import minesweeper.util.Util;
 
@@ -44,7 +45,7 @@ public class GameImpl implements Game {
   public GameImpl() {
     listeners = new HashSet<>();
     difficulty = GameDifficulty.BEGINNER;
-    createBoard(10, 10, 9);
+    createBoard(BEGINNER_X, BEGINNER_Y, BEGINNER_MINES);
     secondsPassed = 0;
     started = false;
     finished = 0;
@@ -57,13 +58,13 @@ public class GameImpl implements Game {
 
     switch (difficulty) {
       case BEGINNER:
-        createBoard(9, 9, 10);
+        createBoard(BEGINNER_X, BEGINNER_Y, BEGINNER_MINES);
         break;
       case INTERMEDIATE:
-        createBoard(16, 16, 40);
+        createBoard(INTERMEDIATE_X, INTERMEDIATE_Y, INTERMEDIATE_MINES);
         break;
       case EXPERT:
-        createBoard(30, 16, 99);
+        createBoard(EXPERT_X, EXPERT_Y, EXPERT_MINES);
         break;
       case CUSTOM:
         createBoard(width, height, numMines);
@@ -113,9 +114,10 @@ public class GameImpl implements Game {
   @Override
   public void createBoard(int width, int height, int numMines) {
     // Clamp the dimensions and mine numbers
-    dims = new Point(Util.clamp(width, 9, 30), Util.clamp(height, 9, 24));
+    dims = new Point(Util.clamp(width, MIN_DIM_X, MAX_DIM_X),
+        Util.clamp(height, MIN_DIM_Y, MAX_DIM_Y));
     int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
-    this.numMines = Util.clamp(numMines, 10, maxMines);
+    this.numMines = Util.clamp(numMines, MIN_MINES, maxMines);
 
     // Step 1
     cells = new ArrayList<>();
@@ -146,9 +148,11 @@ public class GameImpl implements Game {
   @Override
   public void createBoard(List<List<Boolean>> mines) {
     // Clamp the dimensions and mine numbers
-    dims = new Point(Util.clamp(mines.get(0).size(), 9, 30), Util.clamp(mines.size(), 9, 24));
+    dims = new Point(
+        Util.clamp(mines.get(0).size(), MIN_DIM_X, MAX_DIM_X),
+        Util.clamp(mines.size(), MIN_DIM_Y, MAX_DIM_Y));
     int maxMines = (int) ((dims.getX() - 1) * (dims.getY() - 1));
-    this.numMines = Util.clamp(numMines, 10, maxMines);
+    this.numMines = Util.clamp(numMines, MIN_MINES, maxMines);
 
     // Create Cells based on mines
     cells = new ArrayList<>();
@@ -189,7 +193,7 @@ public class GameImpl implements Game {
   @Override
   public void tick() {
     if (started && finished == 0) {
-      if (secondsPassed < 999) {
+      if (secondsPassed < MAX_SECONDS) {
         secondsPassed++;
         alertListeners(GameChangeType.TICK);
       }
